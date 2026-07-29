@@ -2,9 +2,9 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.session import Base
+from app.models.base import TimestampMixin
 
-
-class User(Base):
+class User(TimestampMixin, Base):
     """
     Represents an application user.
     """
