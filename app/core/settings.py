@@ -1,13 +1,18 @@
+from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """
-    Application settings loaded from environment variables.
+    Centralized application configuration.
+    Values are loaded from the .env file.
     """
 
     APP_NAME: str = "FinPilot AI"
+    APP_VERSION: str = "1.0.0"
     APP_ENV: str = "development"
+
     DEBUG: bool = True
 
     HOST: str = "0.0.0.0"
@@ -19,4 +24,6 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
