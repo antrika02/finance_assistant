@@ -3,7 +3,12 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.session import Base
 from app.models.base import TimestampMixin
+from sqlalchemy.orm import Mapped, mapped_column, relationship 
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.category import Category
+    
 class User(TimestampMixin, Base):
     """
     Represents an application user.
@@ -38,4 +43,9 @@ class User(TimestampMixin, Base):
     is_verified: Mapped[bool] = mapped_column(
         default=False,
         nullable=False,
+    )
+
+    categories: Mapped[list["Category"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
     )
