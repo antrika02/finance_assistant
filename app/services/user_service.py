@@ -26,14 +26,15 @@ class UserService:
             )
 
         return self.repository.create(
-            {
-                "full_name": data.full_name,
-                "email": str(data.email),
-            }
+            full_name=data.full_name,
+            email=str(data.email),
         )
-
+    
     def get_user(self, user_id: int) -> User | None:
         return self.repository.get_by_id(user_id)
+
+    def get_user_by_email(self, email: str) -> User | None:
+        return self.repository.get_by_email(email)
 
     def get_all_users(self) -> list[User]:
         return self.repository.get_all()
@@ -46,3 +47,5 @@ class UserService:
 
         self.repository.delete(user)
         return True
+
+    

@@ -18,7 +18,7 @@ class BaseRepository(Generic[ModelType]):
         self.db = db
         self.model = model
 
-    def create(self, data: dict) -> ModelType:
+    def create(self, **data) -> ModelType:
         obj = self.model(**data)
 
         self.db.add(obj)

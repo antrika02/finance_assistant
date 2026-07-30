@@ -27,3 +27,15 @@ class User(TimestampMixin, Base):
         nullable=False,
         index=True,
     )
+
+    hashed_password: Mapped[str] = mapped_column(nullable=False)
+
+    is_active: Mapped[bool] = mapped_column(
+        default=True,
+        nullable=False,
+    )
+
+    is_verified: Mapped[bool] = mapped_column(
+        default=False,
+        nullable=False,
+    )
