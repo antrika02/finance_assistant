@@ -22,14 +22,7 @@ def create_user(
     """
     Create a new user.
     """
-    try:
-        return service.create_user(user)
-
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        )
+    return service.create_user(user)
 
 
 @router.get(

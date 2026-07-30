@@ -1,7 +1,7 @@
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
-
+from app.exceptions.user import UserAlreadyExistsError
 
 class UserService:
     """
@@ -16,14 +16,20 @@ class UserService:
         Create a new user after validating business rules.
         """
 
-        existing_user = self.repository.get_by_email(data.email)
+        existing_user = self.repository.get_by_email(str(data.email))
 
         if existing_user:
-            raise ValueError("A user with this email already exists.")
+            raise UserAlreadyExistsError(
+
+                 "A user with this email already exists."
+
+            )
 
         return self.repository.create(
-            full_name=data.full_name,
-            email=str(data.email),
+            {
+                "full_name": data.full_name,
+                "email": str(data.email),
+            }
         )
 
     def get_user(self, user_id: int) -> User | None:
