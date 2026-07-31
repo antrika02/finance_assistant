@@ -11,3 +11,9 @@ from .transaction import (
     TransactionUpdate,
 )
 from .user import *
+from .dashboard import (
+    DashboardSummaryResponse,
+    CategoryBreakdownResponse,
+    MonthlySummaryResponse,
+    RecentTransactionResponse,
+)
