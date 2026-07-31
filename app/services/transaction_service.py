@@ -94,10 +94,7 @@ class TransactionService:
         for key, value in update_data.items():
             setattr(transaction, key, value)
 
-        self.repository.db.commit()
-        self.repository.db.refresh(transaction)
-
-        return transaction
+        return self.repository.update(transaction)
 
     def delete_transaction(
         self,

@@ -56,10 +56,7 @@ class CategoryService:
         for key, value in update_data.items():
             setattr(category, key, value)
 
-        self.repository.db.commit()
-        self.repository.db.refresh(category)
-
-        return category
+        return self.repository.update(category)
 
     def delete_category(
         self,

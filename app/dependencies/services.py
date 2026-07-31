@@ -11,6 +11,9 @@ from app.services.auth_service import AuthService
 from app.services.category_service import CategoryService
 from app.repositories.transaction_repository import TransactionRepository
 from app.services.transaction_service import TransactionService
+from app.repositories.dashboard_repository import DashboardRepository
+from app.services.dashboard_service import DashboardService
+
 
 def get_user_service(
     db: Session = Depends(get_db),
@@ -50,4 +53,11 @@ def get_transaction_service(
     return TransactionService(
         TransactionRepository(db),
         CategoryRepository(db),
+    )
+
+def get_dashboard_service(
+    db: Session = Depends(get_db),
+) -> DashboardService:
+    return DashboardService(
+        DashboardRepository(db),
     )
