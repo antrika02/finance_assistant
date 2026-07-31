@@ -4,7 +4,8 @@ class AppException(Exception):
     """
 
     status_code = 400
+    default_message = "Application error."
 
-    def __init__(self, message: str):
-        self.message = message
-        super().__init__(message)
+    def __init__(self, message: str | None = None):
+        self.message = message or self.default_message
+        super().__init__(self.message)

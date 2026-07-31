@@ -1,3 +1,7 @@
+from app.exceptions.category import (
+    CategoryAccessDeniedError,
+    CategoryNotFoundError,
+)
 from app.models.category import Category
 from app.repositories.category_repository import CategoryRepository
 from app.schemas.category import CategoryCreate, CategoryUpdate
@@ -27,11 +31,20 @@ class CategoryService:
     ) -> list[Category]:
         return self.repository.get_by_user(user_id)
 
-    def get_category(
+    def get_owned_category(
         self,
         category_id: int,
-    ) -> Category | None:
-        return self.repository.get_by_id(category_id)
+        user_id: int,
+    ) -> Category:
+        category = self.repository.get_by_id(category_id)
+
+        if category is None:
+            raise CategoryNotFoundError()
+
+        if category.user_id != user_id:
+            raise CategoryAccessDeniedError()
+
+        return category
 
     def update_category(
         self,

@@ -123,3 +123,53 @@ def delete_category(
         )
 
     service.delete_category(category)
+
+@router.get(
+    "/{category_id}",
+    response_model=CategoryResponse,
+)
+def get_category(
+    category_id: int,
+    current_user: User = Depends(get_current_user),
+    service: CategoryService = Depends(get_category_service),
+):
+    return service.get_owned_category(
+        category_id,
+        current_user.id,
+    )
+
+@router.put(
+    "/{category_id}",
+    response_model=CategoryResponse,
+)
+def update_category(
+    category_id: int,
+    request: CategoryUpdate,
+    current_user: User = Depends(get_current_user),
+    service: CategoryService = Depends(get_category_service),
+):
+    category = service.get_owned_category(
+        category_id,
+        current_user.id,
+    )
+
+    return service.update_category(
+        category,
+        request,
+    )
+
+@router.delete(
+    "/{category_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_category(
+    category_id: int,
+    current_user: User = Depends(get_current_user),
+    service: CategoryService = Depends(get_category_service),
+):
+    category = service.get_owned_category(
+        category_id,
+        current_user.id,
+    )
+
+    service.delete_category(category)

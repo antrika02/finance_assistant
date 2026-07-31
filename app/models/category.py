@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Enum, ForeignKey, String
+from sqlalchemy import ForeignKey, String
+from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.session import Base
@@ -10,6 +11,7 @@ from sqlalchemy import Enum as SQLEnum
 
 if TYPE_CHECKING:
     from app.models.user import User
+    from app.models.transaction import Transaction
 
 
 class Category(TimestampMixin, Base):
@@ -61,4 +63,9 @@ class Category(TimestampMixin, Base):
 
     user: Mapped["User"] = relationship(
         back_populates="categories",
+    )
+
+    transactions: Mapped[list["Transaction"]] = relationship(
+        back_populates="category",
+        cascade="all, delete-orphan",
     )

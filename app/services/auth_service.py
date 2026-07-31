@@ -1,15 +1,22 @@
 from app.auth.hashing import hash_password, verify_password
+from app.exceptions.user import (
+    InvalidCredentialsError,
+    UserAlreadyExistsError,
+    UserNotFoundError,
+)
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import LoginRequest, RegisterRequest
-from app.exceptions.user import UserAlreadyExistsError, UserNotFoundError
+from app.schemas.auth import RegisterRequest
 
 
 class AuthService:
     def __init__(self, repository: UserRepository):
         self.user_repository = repository
 
-    def register(self, request: RegisterRequest) -> User:
+    def register(
+        self,
+        request: RegisterRequest,
+    ) -> User:
         existing_user = self.user_repository.get_by_email(request.email)
 
         if existing_user:
@@ -34,8 +41,6 @@ class AuthService:
             raise UserNotFoundError()
 
         if not verify_password(password, user.hashed_password):
-            raise UserNotFoundError()
+            raise InvalidCredentialsError()
 
         return user
-
-    

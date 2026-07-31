@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.category import Category
+    from app.models.transaction import Transaction
     
 class User(TimestampMixin, Base):
     """
@@ -49,3 +50,9 @@ class User(TimestampMixin, Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+
+
+    transactions: Mapped[list["Transaction"]] = relationship(
+    back_populates="user",
+    cascade="all, delete-orphan",
+)

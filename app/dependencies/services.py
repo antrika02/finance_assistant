@@ -9,7 +9,8 @@ from app.repositories.category_repository import CategoryRepository
 from app.services.user_service import UserService
 from app.services.auth_service import AuthService
 from app.services.category_service import CategoryService
-
+from app.repositories.transaction_repository import TransactionRepository
+from app.services.transaction_service import TransactionService
 
 def get_user_service(
     db: Session = Depends(get_db),
@@ -42,3 +43,11 @@ def get_category_service(
     repository = CategoryRepository(db)
 
     return CategoryService(repository)
+
+def get_transaction_service(
+    db: Session = Depends(get_db),
+) -> TransactionService:
+    return TransactionService(
+        TransactionRepository(db),
+        CategoryRepository(db),
+    )
