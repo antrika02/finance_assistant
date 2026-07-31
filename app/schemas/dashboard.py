@@ -8,3 +8,7 @@ class DashboardSummaryResponse(BaseModel):
     total_expense: Decimal
     current_balance: Decimal
     total_transactions: int
+
+class CategoryBreakdownResponse(BaseModel):
+    category: str
+    amount: Decimal

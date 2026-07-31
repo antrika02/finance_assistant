@@ -1,8 +1,8 @@
-from sqlalchemy import func, select
+from sqlalchemy import select, func, desc
 from sqlalchemy.orm import Session
 
 from app.enums import TransactionType
-from app.models import Transaction
+from app.models import Category, Transaction
 
 
 class DashboardRepository:
@@ -44,3 +44,25 @@ class DashboardRepository:
             "current_balance": income - expense,
             "total_transactions": total_transactions or 0,
         }
+
+    def get_category_breakdown(self, user_id: int):
+        statement = (
+            select(
+                Category.name.label("category"),
+                func.sum(Transaction.amount).label("amount"),
+            )
+            .join(
+                Transaction,
+                Transaction.category_id == Category.id,
+            )
+            .where(
+                Transaction.user_id == user_id,
+                Transaction.type == TransactionType.EXPENSE,
+            )
+            .group_by(Category.name)
+            .order_by(desc("amount"))
+        )
+
+        result = self.db.execute(statement)
+
+        return result.all()
