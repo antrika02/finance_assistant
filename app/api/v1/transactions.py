@@ -49,7 +49,7 @@ def get_transaction(
     current_user: User = Depends(get_current_user),
     service: TransactionService = Depends(get_transaction_service),
 ):
-    return service.get_owned_transaction(
+    return service.get_transaction(
         transaction_id,
         current_user.id,
     )

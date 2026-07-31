@@ -1,5 +1,6 @@
 from .dashboard import DashboardSummaryResponse
 from .auth import *
+from .common import PaginatedResponse
 from .category import (
     CategoryCreate,
     CategoryResponse,

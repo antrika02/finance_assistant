@@ -1,9 +1,10 @@
 from app.exceptions.base import AppException
-from app.models import Category, Transaction
+from app.models import Transaction
 from app.repositories.category_repository import CategoryRepository
 from app.repositories.transaction_repository import TransactionRepository
 from app.schemas import (
     TransactionCreate,
+    TransactionResponse,
     TransactionUpdate,
 )
 
@@ -38,7 +39,7 @@ class TransactionService:
         self,
         data: TransactionCreate,
         user_id: int,
-    ) -> Transaction:
+    ) -> TransactionResponse:
 
         category = self.category_repository.get_by_id(
             data.category_id
@@ -52,7 +53,7 @@ class TransactionService:
                 "You cannot use another user's category."
             )
 
-        return self.repository.create(
+        transaction = self.repository.create(
             amount=data.amount,
             type=data.type,
             description=data.description,
@@ -61,11 +62,19 @@ class TransactionService:
             user_id=user_id,
         )
 
+        return TransactionResponse.model_validate(transaction)
+
     def get_transactions(
         self,
         user_id: int,
-    ) -> list[Transaction]:
-        return self.repository.get_by_user(user_id)
+    ) -> list[TransactionResponse]:
+
+        transactions = self.repository.get_by_user(user_id)
+
+        return [
+            TransactionResponse.model_validate(transaction)
+            for transaction in transactions
+        ]
 
     def get_owned_transaction(
         self,
@@ -83,18 +92,33 @@ class TransactionService:
 
         return transaction
 
+    def get_transaction(
+        self,
+        transaction_id: int,
+        user_id: int,
+    ) -> TransactionResponse:
+
+        transaction = self.get_owned_transaction(
+            transaction_id,
+            user_id,
+        )
+
+        return TransactionResponse.model_validate(transaction)
+
     def update_transaction(
         self,
         transaction: Transaction,
         data: TransactionUpdate,
-    ) -> Transaction:
+    ) -> TransactionResponse:
 
         update_data = data.model_dump(exclude_unset=True)
 
         for key, value in update_data.items():
             setattr(transaction, key, value)
 
-        return self.repository.update(transaction)
+        transaction = self.repository.update(transaction)
+
+        return TransactionResponse.model_validate(transaction)
 
     def delete_transaction(
         self,

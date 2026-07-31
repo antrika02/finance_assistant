@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models import Transaction
@@ -13,11 +13,31 @@ class TransactionRepository(BaseRepository[Transaction]):
     def get_by_user(
         self,
         user_id: int,
+        offset: int = 0,
+        limit: int = 20,
     ) -> list[Transaction]:
         statement = (
             select(Transaction)
             .where(Transaction.user_id == user_id)
             .order_by(Transaction.transaction_date.desc())
+            .offset(offset)
+            .limit(limit)
         )
 
-        return list(self.db.scalars(statement).all())
+        result = self.db.execute(statement)
+
+        return result.scalars().all()
+
+    def count_by_user(
+        self,
+        user_id: int,
+    ) -> int:
+        statement = (
+            select(func.count())
+            .select_from(Transaction)
+            .where(Transaction.user_id == user_id)
+        )
+
+        result = self.db.execute(statement)
+
+        return result.scalar_one()

@@ -58,3 +58,14 @@ def get_recent_transactions(
     dashboard_service: DashboardService = Depends(get_dashboard_service),
 ):
     return dashboard_service.get_recent_transactions(current_user.id)
+
+
+@router.get(
+    "/top-spending-categories",
+    response_model=list[CategoryBreakdownResponse],
+)
+def get_top_spending_categories(
+    current_user: User = Depends(get_current_user),
+    dashboard_service: DashboardService = Depends(get_dashboard_service),
+):
+    return dashboard_service.get_top_spending_categories(current_user.id)

@@ -141,7 +141,11 @@ class DashboardRepository:
             "total_transactions": total_transactions or 0,
         }
 
-    def get_category_breakdown(self, user_id: int):
+    def get_category_breakdown(
+        self,
+        user_id: int,
+        limit: int | None = None,
+    ):
         statement = (
             select(
                 Category.name.label("category"),
@@ -158,6 +162,9 @@ class DashboardRepository:
             .group_by(Category.name)
             .order_by(desc("amount"))
         )
+
+        if limit is not None:
+            statement = statement.limit(limit)
 
         result = self.db.execute(statement)
 

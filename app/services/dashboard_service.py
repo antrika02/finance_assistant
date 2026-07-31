@@ -58,3 +58,17 @@ class DashboardService:
             )
             for row in result
         ]
+
+    def get_top_spending_categories(self, user_id: int):
+        result = self.repository.get_category_breakdown(
+            user_id=user_id,
+            limit=5,
+        )
+
+        return [
+            CategoryBreakdownResponse(
+                category=row.category,
+                amount=row.amount,
+            )
+            for row in result
+        ]
