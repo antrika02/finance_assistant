@@ -15,7 +15,8 @@ from app.services.category_service import CategoryService
 from app.services.transaction_service import TransactionService
 from app.services.dashboard_service import DashboardService
 from app.services.budget_service import BudgetService
-
+from app.repositories.report_repository import ReportRepository
+from app.services.report_service import ReportService
 
 def get_user_service(
     db: Session = Depends(get_db),
@@ -79,4 +80,11 @@ def get_budget_service(
     return BudgetService(
         BudgetRepository(db),
         CategoryRepository(db),
+    )
+
+def get_report_service(
+    db: Session = Depends(get_db),
+) -> ReportService:
+    return ReportService(
+        ReportRepository(db),
     )

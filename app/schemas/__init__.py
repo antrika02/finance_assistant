@@ -2,7 +2,7 @@ from .auth import *
 from .common import PaginatedResponse
 
 from .user import *
-
+from .report import MonthlyReportResponse
 from .category import (
     CategoryCreate,
     CategoryResponse,
@@ -61,4 +61,5 @@ __all__ = [
     "BudgetUpdate",
     "BudgetResponse",
     "BudgetStatusResponse",
+    "MonthlyReportResponse",
 ]

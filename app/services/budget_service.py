@@ -128,9 +128,7 @@ class BudgetService:
 
         budget = self.repository.update(budget)
 
-        return BudgetResponse.model_validate(
-            budget
-        )
+        return BudgetResponse.model_validate(budget)
 
     def delete_budget(
         self,
@@ -144,37 +142,83 @@ class BudgetService:
         user_id: int,
     ) -> list[BudgetStatusResponse]:
 
-        rows = self.repository.get_budget_status(user_id)
+        result = self.repository.get_budget_status(user_id)
 
-        result = []
+        response = []
 
-        for row in rows:
-            budget = Decimal(row.budget)
-            spent = Decimal(row.spent)
+        for row in result:
+
+            budget = Decimal(str(row.budget))
+            spent = Decimal(str(row.spent or 0))
 
             remaining = budget - spent
 
-            if budget > 0:
-                percentage = float((spent / budget) * 100)
-            else:
-                percentage = 0.0
+            percentage_used = (
+                float((spent / budget) * 100)
+                if budget > 0
+                else 0.0
+            )
 
-            if percentage < 80:
-                status = "On Track"
-            elif percentage <= 100:
+            if percentage_used >= 100:
+                status = "Exceeded"
+            elif percentage_used >= 80:
                 status = "Warning"
             else:
-                status = "Exceeded"
+                status = "Healthy"
 
-            result.append(
+            response.append(
                 BudgetStatusResponse(
                     category=row.category,
                     budget=budget,
                     spent=spent,
                     remaining=remaining,
-                    percentage_used=round(percentage, 2),
+                    percentage_used=percentage_used,
                     status=status,
                 )
             )
 
-        return result
+        return response
+
+    def get_budget_alerts(
+        self,
+        user_id: int,
+    ) -> list[BudgetStatusResponse]:
+
+        result = self.repository.get_alerts(user_id)
+
+        response = []
+
+        for row in result:
+
+            budget = Decimal(str(row.budget))
+            spent = Decimal(str(row.spent or 0))
+
+            if budget <= 0:
+                continue
+
+            percentage_used = float(
+                (spent / budget) * 100
+            )
+
+            if percentage_used < 80:
+                continue
+
+            remaining = budget - spent
+
+            if percentage_used >= 100:
+                status = "Exceeded"
+            else:
+                status = "Warning"
+
+            response.append(
+                BudgetStatusResponse(
+                    category=row.category,
+                    budget=budget,
+                    spent=spent,
+                    remaining=remaining,
+                    percentage_used=percentage_used,
+                    status=status,
+                )
+            )
+
+        return response

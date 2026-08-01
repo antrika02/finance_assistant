@@ -1,6 +1,7 @@
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.enums import TransactionType
 from app.models import Budget, Category, Transaction
 from app.repositories.base_repository import BaseRepository
 
@@ -75,7 +76,8 @@ class BudgetRepository(BaseRepository[Budget]):
             .outerjoin(
                 Transaction,
                 (Transaction.category_id == Budget.category_id)
-                & (Transaction.user_id == Budget.user_id),
+                & (Transaction.user_id == Budget.user_id)
+                & (Transaction.type == TransactionType.EXPENSE),
             )
             .where(
                 Budget.user_id == user_id,
@@ -83,9 +85,13 @@ class BudgetRepository(BaseRepository[Budget]):
             .group_by(
                 Category.name,
                 Budget.amount,
-                Budget.id,
             )
-            .order_by(Category.name)
         )
 
         return self.db.execute(statement).all()
+
+    def get_alerts(
+        self,
+        user_id: int,
+    ):
+        return self.get_budget_status(user_id)

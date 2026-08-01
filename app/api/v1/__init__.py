@@ -4,4 +4,5 @@ from . import (
     categories,
     transactions,
     users,
+    reports,
 )

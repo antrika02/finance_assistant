@@ -7,7 +7,7 @@ from app.api.v1.transactions import router as transactions_router
 from app.api.v1.users import router as users_router
 from app.api.v1.dashboard import router as dashboard_router
 from app.api.v1.budgets import router as budget_router
-
+from app.api.v1.reports import router as reports_router
 api_router = APIRouter()
 
 api_router.include_router(health_router)
@@ -17,3 +17,4 @@ api_router.include_router(categories_router)
 api_router.include_router(transactions_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(budget_router)
+api_router.include_router(reports_router)

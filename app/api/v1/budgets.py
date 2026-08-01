@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Response, status
 
 from app.auth.dependencies import get_current_user
 from app.dependencies.services import get_budget_service
@@ -23,13 +23,13 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 def create_budget(
-    request: BudgetCreate,
+    data: BudgetCreate,
     current_user: User = Depends(get_current_user),
     service: BudgetService = Depends(get_budget_service),
 ):
     return service.create_budget(
-        request,
-        current_user.id,
+        data=data,
+        user_id=current_user.id,
     )
 
 
@@ -41,9 +41,7 @@ def get_budgets(
     current_user: User = Depends(get_current_user),
     service: BudgetService = Depends(get_budget_service),
 ):
-    return service.get_budgets(
-        current_user.id,
-    )
+    return service.get_budgets(current_user.id)
 
 
 @router.get(
@@ -54,24 +52,7 @@ def get_budget_status(
     current_user: User = Depends(get_current_user),
     service: BudgetService = Depends(get_budget_service),
 ):
-    return service.get_budget_status(
-        current_user.id,
-    )
-
-
-@router.get(
-    "/{budget_id}",
-    response_model=BudgetResponse,
-)
-def get_budget(
-    budget_id: int,
-    current_user: User = Depends(get_current_user),
-    service: BudgetService = Depends(get_budget_service),
-):
-    return service.get_owned_budget(
-        budget_id,
-        current_user.id,
-    )
+    return service.get_budget_status(current_user.id)
 
 
 @router.put(
@@ -80,7 +61,7 @@ def get_budget(
 )
 def update_budget(
     budget_id: int,
-    request: BudgetUpdate,
+    data: BudgetUpdate,
     current_user: User = Depends(get_current_user),
     service: BudgetService = Depends(get_budget_service),
 ):
@@ -91,7 +72,7 @@ def update_budget(
 
     return service.update_budget(
         budget,
-        request,
+        data,
     )
 
 
@@ -110,3 +91,15 @@ def delete_budget(
     )
 
     service.delete_budget(budget)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@router.get(
+    "/alerts",
+    response_model=list[BudgetStatusResponse],
+)
+def get_budget_alerts(
+    current_user: User = Depends(get_current_user),
+    service: BudgetService = Depends(get_budget_service),
+):
+    return service.get_budget_alerts(current_user.id)
