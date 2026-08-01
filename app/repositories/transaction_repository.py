@@ -48,6 +48,12 @@ class TransactionRepository(BaseRepository[Transaction]):
                 statement = statement.where(
                     Transaction.transaction_date <= filters.end_date
                 )
+            if filters.search:
+                statement = statement.where(
+                    Transaction.description.ilike(
+                        f"%{filters.search}%"
+                    )
+                )
 
         # Apply Sorting
         if sort:
@@ -118,6 +124,13 @@ class TransactionRepository(BaseRepository[Transaction]):
             if filters.end_date:
                 statement = statement.where(
                     Transaction.transaction_date <= filters.end_date
+                )
+
+            if filters.search:
+                statement = statement.where(
+                    Transaction.description.ilike(
+                        f"%{filters.search}%"
+                    )
                 )
 
         result = self.db.execute(statement)

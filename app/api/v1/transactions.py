@@ -47,22 +47,22 @@ def get_transactions(
     category_id: int | None = Query(default=None),
     start_date: date | None = Query(default=None),
     end_date: date | None = Query(default=None),
+    search: str | None = Query(default=None),
     page: int = Query(default=1, ge=1),
     size: int = Query(default=20, ge=1, le=100),
     sort: str = Query(default="-transaction_date"),
     current_user: User = Depends(get_current_user),
     service: TransactionService = Depends(get_transaction_service),
 ):
-
     filters = TransactionFilters(
         type=type,
         category_id=category_id,
         start_date=start_date,
         end_date=end_date,
+        search=search,
     )
 
     descending = sort.startswith("-")
-
     field = sort[1:] if descending else sort
 
     sort_params = TransactionSort(
@@ -92,7 +92,7 @@ def get_transaction(
     current_user: User = Depends(get_current_user),
     service: TransactionService = Depends(get_transaction_service),
 ):
-    return service.get_transaction(
+    return service.get_owned_transaction(
         transaction_id,
         current_user.id,
     )
