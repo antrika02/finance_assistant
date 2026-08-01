@@ -3,15 +3,15 @@ from datetime import date
 from fastapi import APIRouter, Depends, Query, status
 
 from app.auth.dependencies import get_current_user
-from app.dependencies import PaginationParams
+from app.dependencies import PaginationParams, TransactionSort
 from app.dependencies.services import get_transaction_service
 from app.models import User
 from app.schemas import (
     PaginatedResponse,
+    SummaryResponse,
     TransactionCreate,
     TransactionFilters,
     TransactionResponse,
-    TransactionSort,
     TransactionUpdate,
 )
 from app.services.transaction_service import TransactionService
@@ -84,6 +84,17 @@ def get_transactions(
 
 
 @router.get(
+    "/summary",
+    response_model=SummaryResponse,
+)
+def get_summary(
+    current_user: User = Depends(get_current_user),
+    service: TransactionService = Depends(get_transaction_service),
+):
+    return service.get_summary(current_user.id)
+
+
+@router.get(
     "/{transaction_id}",
     response_model=TransactionResponse,
 )
@@ -92,10 +103,12 @@ def get_transaction(
     current_user: User = Depends(get_current_user),
     service: TransactionService = Depends(get_transaction_service),
 ):
-    return service.get_owned_transaction(
+    transaction = service.get_owned_transaction(
         transaction_id,
         current_user.id,
     )
+
+    return TransactionResponse.model_validate(transaction)
 
 
 @router.put(

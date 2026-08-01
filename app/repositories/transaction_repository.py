@@ -136,3 +136,41 @@ class TransactionRepository(BaseRepository[Transaction]):
         result = self.db.execute(statement)
 
         return result.scalar_one()
+
+    def get_summary(
+
+        self,
+
+        user_id: int,
+
+    ) -> tuple[float, float]:
+
+        income_statement = select(
+
+            func.coalesce(func.sum(Transaction.amount), 0)
+
+        ).where(
+
+            Transaction.user_id == user_id,
+
+            Transaction.type == "income",
+
+        )
+
+        expense_statement = select(
+
+            func.coalesce(func.sum(Transaction.amount), 0)
+
+        ).where(
+
+            Transaction.user_id == user_id,
+
+            Transaction.type == "expense",
+
+        )
+
+        income = self.db.scalar(income_statement) or 0
+
+        expense = self.db.scalar(expense_statement) or 0
+
+        return float(income), float(expense)

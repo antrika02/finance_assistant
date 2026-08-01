@@ -1,15 +1,17 @@
-from app.dependencies import PaginationParams
+from app.dependencies import (
+    PaginationParams,
+    TransactionSort,
+)
 from app.exceptions.base import AppException
 from app.models import Transaction
 from app.repositories.category_repository import CategoryRepository
-from app.dependencies import PaginationParams
 from app.repositories.transaction_repository import TransactionRepository
 from app.schemas import (
     PaginatedResponse,
+    SummaryResponse,
     TransactionCreate,
     TransactionFilters,
     TransactionResponse,
-    TransactionSort,
     TransactionUpdate,
 )
 
@@ -93,7 +95,7 @@ class TransactionService:
         items = [
             TransactionResponse.model_validate(transaction)
             for transaction in transactions
-       ]
+        ]
 
         return PaginatedResponse[TransactionResponse].create(
             items=items,
@@ -138,3 +140,16 @@ class TransactionService:
         transaction: Transaction,
     ) -> None:
         self.repository.delete(transaction)
+
+    def get_summary(
+        self,
+        user_id: int,
+    ) -> SummaryResponse:
+
+        income, expense = self.repository.get_summary(user_id)
+
+        return SummaryResponse(
+            total_income=income,
+            total_expense=expense,
+            balance=income - expense,
+        )
