@@ -3,15 +3,15 @@ from datetime import date
 from fastapi import APIRouter, Depends, Query, status
 
 from app.auth.dependencies import get_current_user
-from app.dependencies import PaginationParams, get_pagination
+from app.dependencies import PaginationParams
 from app.dependencies.services import get_transaction_service
-from app.enums import TransactionType
 from app.models import User
 from app.schemas import (
     PaginatedResponse,
     TransactionCreate,
     TransactionFilters,
     TransactionResponse,
+    TransactionSort,
     TransactionUpdate,
 )
 from app.services.transaction_service import TransactionService
@@ -43,14 +43,14 @@ def create_transaction(
     response_model=PaginatedResponse[TransactionResponse],
 )
 def get_transactions(
-    current_user: User = Depends(get_current_user),
-    pagination: PaginationParams = Depends(get_pagination),
-
-    type: TransactionType | None = Query(default=None),
+    type: str | None = Query(default=None),
     category_id: int | None = Query(default=None),
     start_date: date | None = Query(default=None),
     end_date: date | None = Query(default=None),
-
+    page: int = Query(default=1, ge=1),
+    size: int = Query(default=20, ge=1, le=100),
+    sort: str = Query(default="-transaction_date"),
+    current_user: User = Depends(get_current_user),
     service: TransactionService = Depends(get_transaction_service),
 ):
 
@@ -61,10 +61,25 @@ def get_transactions(
         end_date=end_date,
     )
 
+    descending = sort.startswith("-")
+
+    field = sort[1:] if descending else sort
+
+    sort_params = TransactionSort(
+        field=field,
+        descending=descending,
+    )
+
+    pagination = PaginationParams(
+        page=page,
+        size=size,
+    )
+
     return service.get_transactions(
-        current_user.id,
-        pagination,
-        filters,
+        user_id=current_user.id,
+        pagination=pagination,
+        filters=filters,
+        sort=sort_params,
     )
 
 

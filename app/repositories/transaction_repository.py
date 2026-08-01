@@ -1,9 +1,9 @@
-from sqlalchemy import func, select
+from sqlalchemy import asc, desc, func, select
 from sqlalchemy.orm import Session
 
 from app.models import Transaction
 from app.repositories.base_repository import BaseRepository
-from app.schemas import TransactionFilters
+from app.schemas import TransactionFilters, TransactionSort
 
 
 class TransactionRepository(BaseRepository[Transaction]):
@@ -17,12 +17,15 @@ class TransactionRepository(BaseRepository[Transaction]):
         offset: int = 0,
         limit: int = 20,
         filters: TransactionFilters | None = None,
+        sort: TransactionSort | None = None,
     ) -> list[Transaction]:
 
         statement = (
             select(Transaction)
             .where(Transaction.user_id == user_id)
         )
+
+        # Apply Filters
 
         if filters:
 
@@ -46,9 +49,34 @@ class TransactionRepository(BaseRepository[Transaction]):
                     Transaction.transaction_date <= filters.end_date
                 )
 
+        # Apply Sorting
+        if sort:
+
+            sort_column = getattr(
+                Transaction,
+                sort.field,
+                Transaction.transaction_date,
+            )
+
+            if sort.descending:
+                statement = statement.order_by(
+                    desc(sort_column)
+                )
+            else:
+                statement = statement.order_by(
+                    asc(sort_column)
+                )
+
+        else:
+
+            statement = statement.order_by(
+                Transaction.transaction_date.desc()
+            )
+
+        # Apply Pagination
+
         statement = (
             statement
-            .order_by(Transaction.transaction_date.desc())
             .offset(offset)
             .limit(limit)
         )
@@ -68,6 +96,7 @@ class TransactionRepository(BaseRepository[Transaction]):
             .select_from(Transaction)
             .where(Transaction.user_id == user_id)
         )
+        # Apply Filters
 
         if filters:
 

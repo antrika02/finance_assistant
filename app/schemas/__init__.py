@@ -20,3 +20,4 @@ from .dashboard import (
 )
 
 from .transaction_filters import TransactionFilters
+from .transaction_sort import TransactionSort
