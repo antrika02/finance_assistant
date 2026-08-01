@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, status
-
+from app.dependencies import get_pagination, PaginationParams
 from app.auth.dependencies import get_current_user
 from app.dependencies.services import get_transaction_service
 from app.models import User
+from app.schemas import PaginatedResponse
 from app.schemas import (
     TransactionCreate,
     TransactionResponse,
@@ -31,13 +32,17 @@ def create_transaction(
 
 @router.get(
     "",
-    response_model=list[TransactionResponse],
+    response_model=PaginatedResponse[TransactionResponse],
 )
 def get_transactions(
     current_user: User = Depends(get_current_user),
+    pagination: PaginationParams = Depends(get_pagination),
     service: TransactionService = Depends(get_transaction_service),
 ):
-    return service.get_transactions(current_user.id)
+    return service.get_transactions(
+        current_user.id,
+        pagination,
+    )
 
 
 @router.get(

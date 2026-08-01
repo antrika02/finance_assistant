@@ -2,7 +2,9 @@ from app.exceptions.base import AppException
 from app.models import Transaction
 from app.repositories.category_repository import CategoryRepository
 from app.repositories.transaction_repository import TransactionRepository
+from app.dependencies import PaginationParams
 from app.schemas import (
+    PaginatedResponse,
     TransactionCreate,
     TransactionResponse,
     TransactionUpdate,
@@ -92,16 +94,31 @@ class TransactionService:
 
         return transaction
 
-    def get_transaction(
+    def get_transactions(
         self,
-        transaction_id: int,
         user_id: int,
-    ) -> TransactionResponse:
+        pagination: PaginationParams,
+    ) -> PaginatedResponse[TransactionResponse]:
 
-        transaction = self.get_owned_transaction(
-            transaction_id,
-            user_id,
+        transactions = self.repository.get_by_user(
+            user_id=user_id,
+            offset=pagination.offset,
+            limit=pagination.size,
         )
+
+        total = self.repository.count_by_user(user_id)
+
+        items = [
+            TransactionResponse.model_validate(transaction)
+            for transaction in transactions
+        ]
+
+        return PaginatedResponse[TransactionResponse].create(
+            items=items,
+            page=pagination.page,
+            size=pagination.size,
+            total=total,
+       )
 
         return TransactionResponse.model_validate(transaction)
 
