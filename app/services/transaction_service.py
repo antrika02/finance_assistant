@@ -1,11 +1,12 @@
+from app.dependencies import PaginationParams
 from app.exceptions.base import AppException
 from app.models import Transaction
 from app.repositories.category_repository import CategoryRepository
 from app.repositories.transaction_repository import TransactionRepository
-from app.dependencies import PaginationParams
 from app.schemas import (
     PaginatedResponse,
     TransactionCreate,
+    TransactionFilters,
     TransactionResponse,
     TransactionUpdate,
 )
@@ -69,14 +70,33 @@ class TransactionService:
     def get_transactions(
         self,
         user_id: int,
-    ) -> list[TransactionResponse]:
+        pagination: PaginationParams,
+        filters: TransactionFilters,
+    ) -> PaginatedResponse[TransactionResponse]:
 
-        transactions = self.repository.get_by_user(user_id)
+        transactions = self.repository.get_by_user(
+            user_id=user_id,
+            offset=pagination.offset,
+            limit=pagination.size,
+            filters=filters,
+        )
 
-        return [
+        total = self.repository.count_by_user(
+            user_id=user_id,
+            filters=filters,
+        )
+
+        items = [
             TransactionResponse.model_validate(transaction)
             for transaction in transactions
         ]
+
+        return PaginatedResponse[TransactionResponse].create(
+            items=items,
+            page=pagination.page,
+            size=pagination.size,
+            total=total,
+        )
 
     def get_owned_transaction(
         self,
@@ -93,34 +113,6 @@ class TransactionService:
             raise TransactionAccessDeniedError()
 
         return transaction
-
-    def get_transactions(
-        self,
-        user_id: int,
-        pagination: PaginationParams,
-    ) -> PaginatedResponse[TransactionResponse]:
-
-        transactions = self.repository.get_by_user(
-            user_id=user_id,
-            offset=pagination.offset,
-            limit=pagination.size,
-        )
-
-        total = self.repository.count_by_user(user_id)
-
-        items = [
-            TransactionResponse.model_validate(transaction)
-            for transaction in transactions
-        ]
-
-        return PaginatedResponse[TransactionResponse].create(
-            items=items,
-            page=pagination.page,
-            size=pagination.size,
-            total=total,
-       )
-
-        return TransactionResponse.model_validate(transaction)
 
     def update_transaction(
         self,

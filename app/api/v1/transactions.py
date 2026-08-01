@@ -1,17 +1,25 @@
-from fastapi import APIRouter, Depends, status
-from app.dependencies import get_pagination, PaginationParams
+from datetime import date
+
+from fastapi import APIRouter, Depends, Query, status
+
 from app.auth.dependencies import get_current_user
+from app.dependencies import PaginationParams, get_pagination
 from app.dependencies.services import get_transaction_service
+from app.enums import TransactionType
 from app.models import User
-from app.schemas import PaginatedResponse
 from app.schemas import (
+    PaginatedResponse,
     TransactionCreate,
+    TransactionFilters,
     TransactionResponse,
     TransactionUpdate,
 )
 from app.services.transaction_service import TransactionService
 
-router = APIRouter(prefix="/transactions", tags=["Transactions"])
+router = APIRouter(
+    prefix="/transactions",
+    tags=["Transactions"],
+)
 
 
 @router.post(
@@ -37,11 +45,26 @@ def create_transaction(
 def get_transactions(
     current_user: User = Depends(get_current_user),
     pagination: PaginationParams = Depends(get_pagination),
+
+    type: TransactionType | None = Query(default=None),
+    category_id: int | None = Query(default=None),
+    start_date: date | None = Query(default=None),
+    end_date: date | None = Query(default=None),
+
     service: TransactionService = Depends(get_transaction_service),
 ):
+
+    filters = TransactionFilters(
+        type=type,
+        category_id=category_id,
+        start_date=start_date,
+        end_date=end_date,
+    )
+
     return service.get_transactions(
         current_user.id,
         pagination,
+        filters,
     )
 
 
