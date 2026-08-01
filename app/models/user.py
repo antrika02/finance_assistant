@@ -1,15 +1,17 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.session import Base
 from app.models.base import TimestampMixin
-from sqlalchemy.orm import Mapped, mapped_column, relationship 
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.category import Category
     from app.models.transaction import Transaction
-    
+    from app.models.budget import Budget
+
+
 class User(TimestampMixin, Base):
     """
     Represents an application user.
@@ -34,7 +36,9 @@ class User(TimestampMixin, Base):
         index=True,
     )
 
-    hashed_password: Mapped[str] = mapped_column(nullable=False)
+    hashed_password: Mapped[str] = mapped_column(
+        nullable=False,
+    )
 
     is_active: Mapped[bool] = mapped_column(
         default=True,
@@ -51,8 +55,12 @@ class User(TimestampMixin, Base):
         cascade="all, delete-orphan",
     )
 
-
     transactions: Mapped[list["Transaction"]] = relationship(
-    back_populates="user",
-    cascade="all, delete-orphan",
-)
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+    budgets: Mapped[list["Budget"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )

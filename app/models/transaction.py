@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 
 
 class Transaction(TimestampMixin, Base):
+    """
+    Represents a financial transaction.
+    """
 
     __tablename__ = "transactions"
 
@@ -45,22 +48,22 @@ class Transaction(TimestampMixin, Base):
         nullable=False,
     )
 
-    category_id: Mapped[int] = mapped_column(
-        ForeignKey("categories.id"),
-        nullable=False,
-        index=True,
-    )
-
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"),
         nullable=False,
         index=True,
     )
 
-    category: Mapped["Category"] = relationship(
-        back_populates="transactions",
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey("categories.id"),
+        nullable=False,
+        index=True,
     )
 
     user: Mapped["User"] = relationship(
+        back_populates="transactions",
+    )
+
+    category: Mapped["Category"] = relationship(
         back_populates="transactions",
     )
