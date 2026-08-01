@@ -1,14 +1,15 @@
 from fastapi import APIRouter, Depends, status
 
 from app.auth.dependencies import get_current_user
+from app.dependencies.services import get_budget_service
 from app.models import User
 from app.schemas import (
     BudgetCreate,
     BudgetResponse,
+    BudgetStatusResponse,
     BudgetUpdate,
 )
 from app.services.budget_service import BudgetService
-from app.dependencies.services import get_budget_service
 
 router = APIRouter(
     prefix="/budgets",
@@ -41,6 +42,19 @@ def get_budgets(
     service: BudgetService = Depends(get_budget_service),
 ):
     return service.get_budgets(
+        current_user.id,
+    )
+
+
+@router.get(
+    "/status",
+    response_model=list[BudgetStatusResponse],
+)
+def get_budget_status(
+    current_user: User = Depends(get_current_user),
+    service: BudgetService = Depends(get_budget_service),
+):
+    return service.get_budget_status(
         current_user.id,
     )
 

@@ -34,3 +34,4 @@ class BudgetStatusResponse(BaseModel):
     spent: Decimal
     remaining: Decimal
     percentage_used: float
+    status: str

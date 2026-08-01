@@ -3,14 +3,13 @@ from fastapi import APIRouter, Depends
 from app.auth.dependencies import get_current_user
 from app.dependencies.services import get_dashboard_service
 from app.models import User
-from app.services.dashboard_service import DashboardService
 from app.schemas.dashboard import (
     DashboardSummaryResponse,
     CategoryBreakdownResponse,
     MonthlySummaryResponse,
     RecentTransactionResponse,
 )
-from app.schemas.dashboard import MonthlySummaryResponse
+from app.services.dashboard_service import DashboardService
 
 router = APIRouter(
     prefix="/dashboard",
@@ -27,6 +26,7 @@ def get_summary(
     service: DashboardService = Depends(get_dashboard_service),
 ):
     return service.get_summary(current_user.id)
+
 
 @router.get(
     "/category-breakdown",
@@ -48,6 +48,7 @@ def get_monthly_summary(
     dashboard_service: DashboardService = Depends(get_dashboard_service),
 ):
     return dashboard_service.get_monthly_summary(current_user.id)
+
 
 @router.get(
     "/recent-transactions",

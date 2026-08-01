@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from app.exceptions.base import AppException
 from app.models import Budget
 from app.repositories.budget_repository import BudgetRepository
@@ -5,6 +7,7 @@ from app.repositories.category_repository import CategoryRepository
 from app.schemas import (
     BudgetCreate,
     BudgetResponse,
+    BudgetStatusResponse,
     BudgetUpdate,
 )
 
@@ -135,3 +138,43 @@ class BudgetService:
     ) -> None:
 
         self.repository.delete(budget)
+
+    def get_budget_status(
+        self,
+        user_id: int,
+    ) -> list[BudgetStatusResponse]:
+
+        rows = self.repository.get_budget_status(user_id)
+
+        result = []
+
+        for row in rows:
+            budget = Decimal(row.budget)
+            spent = Decimal(row.spent)
+
+            remaining = budget - spent
+
+            if budget > 0:
+                percentage = float((spent / budget) * 100)
+            else:
+                percentage = 0.0
+
+            if percentage < 80:
+                status = "On Track"
+            elif percentage <= 100:
+                status = "Warning"
+            else:
+                status = "Exceeded"
+
+            result.append(
+                BudgetStatusResponse(
+                    category=row.category,
+                    budget=budget,
+                    spent=spent,
+                    remaining=remaining,
+                    percentage_used=round(percentage, 2),
+                    status=status,
+                )
+            )
+
+        return result

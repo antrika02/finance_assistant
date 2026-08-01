@@ -1,7 +1,7 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.models import Budget
+from app.models import Budget, Category, Transaction
 from app.repositories.base_repository import BaseRepository
 
 
@@ -54,3 +54,38 @@ class BudgetRepository(BaseRepository[Budget]):
         )
 
         return self.db.scalar(statement)
+
+    def get_budget_status(
+        self,
+        user_id: int,
+    ):
+        statement = (
+            select(
+                Category.name.label("category"),
+                Budget.amount.label("budget"),
+                func.coalesce(
+                    func.sum(Transaction.amount),
+                    0,
+                ).label("spent"),
+            )
+            .join(
+                Category,
+                Budget.category_id == Category.id,
+            )
+            .outerjoin(
+                Transaction,
+                (Transaction.category_id == Budget.category_id)
+                & (Transaction.user_id == Budget.user_id),
+            )
+            .where(
+                Budget.user_id == user_id,
+            )
+            .group_by(
+                Category.name,
+                Budget.amount,
+                Budget.id,
+            )
+            .order_by(Category.name)
+        )
+
+        return self.db.execute(statement).all()
