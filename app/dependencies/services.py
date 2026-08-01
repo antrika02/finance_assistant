@@ -19,6 +19,9 @@ from app.repositories.report_repository import ReportRepository
 from app.services.report_service import ReportService
 from app.services.export_service import ExportService
 from app.repositories.transaction_repository import TransactionRepository
+from app.services.pdf_service import PDFService
+
+
 def get_user_service(
     db: Session = Depends(get_db),
 ) -> UserService:
@@ -95,5 +98,14 @@ def get_export_service(
 ) -> ExportService:
 
     return ExportService(
+        TransactionRepository(db),
+    )
+
+def get_pdf_service(
+    db: Session = Depends(get_db),
+) -> PDFService:
+
+    return PDFService(
+        DashboardRepository(db),
         TransactionRepository(db),
     )

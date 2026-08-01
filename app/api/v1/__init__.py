@@ -6,4 +6,5 @@ from . import (
     users,
     reports,
     export,
+    pdf,
 )
