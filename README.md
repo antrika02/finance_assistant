@@ -1,4 +1,4 @@
-# 💰 FinPilot AI
+# 💰 FinPilot AI — Intelligent Personal Finance Management Backend
 
 <p align="center">
   <img src="images/banner.png" width="100%" alt="FinPilot AI Banner">
@@ -7,7 +7,7 @@
 <p align="center">
   AI-Powered Personal Finance Management Backend built with <b>FastAPI</b>, <b>PostgreSQL</b>, <b>SQLAlchemy</b>, <b>JWT Authentication</b>, <b>Gemini AI</b>, and <b>ReportLab</b>.
   <br>
-  Designed with production-grade backend architecture using the <b>Repository-Service Pattern</b>, dependency injection, modular APIs, and AI-powered financial intelligence.
+  Built using production-inspired backend architecture and clean software engineering principles.
 </p>
 
 <p align="center">
@@ -25,43 +25,64 @@
 
 ## 📑 Table of Contents
 
-1. [Project Overview](#-project-overview)
-2. [Key Features](#-key-features)
-3. [System Architecture](#-system-architecture)
+1. [Project Statistics](#-project-statistics)
+2. [Project Overview](#-project-overview)
+3. [Key Features](#-key-features)
+4. [Design Principles](#️-design-principles)
+5. [System Architecture](#-system-architecture)
    - [High-Level Architecture](#high-level-architecture)
    - [Backend Architecture](#backend-architecture)
    - [Database Schema](#database-schema)
    - [AI Architecture](#ai-architecture)
    - [Request Lifecycle](#request-lifecycle)
-4. [User Flow](#-user-flow)
-5. [Project Structure](#-project-structure)
-6. [Technology Stack](#️-technology-stack)
-7. [Getting Started](#-getting-started)
+6. [User Flow](#-user-flow)
+7. [Project Structure](#-project-structure)
+8. [Technology Stack](#️-technology-stack)
+9. [Getting Started](#-getting-started)
    - [Prerequisites](#-prerequisites)
    - [Installation](#-install-dependencies)
    - [Environment Variables](#-configure-environment-variables)
    - [Database Setup](#️-database-setup)
    - [Running the Server](#️-start-the-development-server)
-8. [API Documentation](#-api-documentation)
-9. [API Reference](#-api-reference)
-   - [Authentication APIs](#-authentication-apis)
-   - [Category APIs](#-category-apis)
-   - [Transaction APIs](#-transaction-apis)
-   - [Dashboard APIs](#-dashboard-apis)
-   - [Budget APIs](#-budget-apis)
-   - [Report & PDF APIs](#-report-apis)
-   - [AI APIs](#-ai-apis)
-10. [Business Rules](#-business-rules)
-11. [Security](#-security)
-12. [Error Handling](#️-error-handling)
-13. [Testing](#-testing)
-14. [Deployment](#️-deployment)
-15. [Screenshots & Demo](#-screenshots--demo)
-16. [Roadmap](#-roadmap)
-17. [FAQ](#-frequently-asked-questions)
-18. [Contributing](#-contributing)
-19. [Author](#-author)
-20. [License](#-license)
+10. [API Documentation](#-api-documentation)
+11. [API Reference](#-api-reference)
+    - [Authentication APIs](#-authentication-apis)
+    - [Category APIs](#-category-apis)
+    - [Transaction APIs](#-transaction-apis)
+    - [Dashboard APIs](#-dashboard-apis)
+    - [Budget APIs](#-budget-apis)
+    - [Report & PDF APIs](#-report-apis)
+    - [AI APIs](#-ai-apis)
+12. [Business Rules](#-business-rules)
+13. [Security](#-security)
+14. [Error Handling](#️-error-handling)
+15. [Testing](#-testing)
+16. [Deployment](#️-deployment)
+17. [Roadmap](#-roadmap)
+18. [FAQ](#-frequently-asked-questions)
+19. [Contributing](#-contributing)
+20. [Author](#-author)
+21. [License](#-license)
+
+---
+
+## 📊 Project Statistics
+
+| Category | Highlight |
+|-----------|-----------|
+| 🐍 Language | Python 3.12 |
+| ⚡ Framework | FastAPI |
+| 🗄️ Database | PostgreSQL 16 |
+| 🧩 ORM | SQLAlchemy |
+| 🔐 Authentication | JWT (Stateless) |
+| 🤖 AI Engine | Google Gemini |
+| 📄 Report Engine | ReportLab (PDF) |
+| 📚 API Documentation | Swagger UI & ReDoc |
+| 🏗️ Architecture | Repository-Service Pattern |
+| 📦 Package Manager | uv |
+| 🔗 REST Endpoints | 29 |
+| 🧱 Architecture Layers | 7 (API, Service, Repository, Model, Schema, AI, Database) |
+| 🧭 Feature Modules | 7 (Auth, Categories, Transactions, Budgets, Dashboard, Reports, AI) |
 
 ---
 
@@ -91,7 +112,6 @@ The project follows a scalable layered architecture using the Repository-Service
 - Categories
 - Monthly Budgets
 - Budget Alerts
-- Dashboard Analytics
 - Financial Reports
 - Recent Transactions
 - Monthly Summary
@@ -117,6 +137,24 @@ The project follows a scalable layered architecture using the Repository-Service
 - Category Breakdown
 - Top Spending Categories
 - Recent Transactions
+
+---
+
+## 🏛️ Design Principles
+
+FinPilot AI is designed around clean architecture principles that separate concerns across multiple layers.
+
+- Repository pattern for database abstraction
+- Service layer for business logic
+- Dependency Injection for loose coupling
+- Pydantic schemas for request and response validation
+- SQLAlchemy ORM for persistence
+- Centralized exception handling
+- JWT-based authentication and authorization
+- Modular API routing
+- AI services isolated from business logic
+
+This architecture improves maintainability, scalability, and testability while keeping each component focused on a single responsibility.
 
 ---
 
@@ -155,10 +193,6 @@ flowchart TD
     GC --> GAI[Google Gemini]
 ```
 
-<p align="center">
-  <img src="images/architecture-overview.png" width="100%" alt="High-Level Architecture">
-</p>
-
 ### Backend Architecture
 
 ```mermaid
@@ -170,10 +204,6 @@ flowchart TD
     BS --> RP[Repositories]
     RP --> DB[(Database)]
 ```
-
-<p align="center">
-  <img src="images/backend-architecture.png" width="100%" alt="Backend Architecture">
-</p>
 
 ### Database Schema
 
@@ -215,10 +245,6 @@ erDiagram
     }
 ```
 
-<p align="center">
-  <img src="images/database-schema.png" width="100%" alt="Database Schema">
-</p>
-
 ### AI Architecture
 
 The AI module is completely isolated from the rest of the application. Instead of allowing API routes to communicate directly with Gemini, every AI request flows through a dedicated service layer.
@@ -237,10 +263,6 @@ flowchart TD
     BS2 --> TC[Top Categories]
     TC --> PB
 ```
-
-<p align="center">
-  <img src="images/ai-flow.png" width="100%" alt="AI Flow">
-</p>
 
 This design makes it easy to replace Gemini with another LLM, modify prompts independently, test AI functionality, and add Retrieval-Augmented Generation (RAG) later.
 
@@ -307,10 +329,6 @@ sequenceDiagram
     API-->>Client: JSON Response
 ```
 
-<p align="center">
-  <img src="images/request-lifecycle.png" width="100%" alt="Request Lifecycle">
-</p>
-
 ---
 
 ## 🧭 User Flow
@@ -332,57 +350,31 @@ flowchart TD
     K --> L[AI Chat]
 ```
 
-<p align="center">
-  <img src="images/user-flow.png" width="100%" alt="User Flow">
-</p>
-
 ---
 
 ## 📂 Project Structure
 
 ```text
-FinPilot-AI/
-├── app/
+FinPilot-AI
 │
-├── api/
-│   ├── router.py
-│   └── v1/
+├── app
+│   ├── ai
+│   ├── api
+│   ├── auth
+│   ├── core
+│   ├── dependencies
+│   ├── exceptions
+│   ├── models
+│   ├── repositories
+│   ├── schemas
+│   ├── services
+│   └── main.py
 │
-├── ai/
-│   ├── client.py
-│   └── prompt_builder.py
-│
-├── auth/
-│
-├── core/
-│   ├── factory.py
-│   ├── security.py
-│   └── settings.py
-│
-├── database/
-│
-├── dependencies/
-│
-├── exceptions/
-│
-├── models/
-│
-├── repositories/
-│
-├── schemas/
-│
-├── services/
-│
-├── main.py
-│
-├── tests/
-│
-├── images/
-│
+├── alembic
+├── tests
+├── images
 ├── .env.example
-│
 ├── pyproject.toml
-│
 └── README.md
 ```
 
@@ -438,7 +430,7 @@ Follow the steps below to set up FinPilot AI on your local machine.
 ### 📥 Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/FinPilot-AI.git
+git clone [https://github.com/antrika02/finance_assistant]
 cd FinPilot-AI
 ```
 
@@ -815,7 +807,7 @@ The application uses centralized exception handling to return consistent error r
 
 ## 🧪 Testing
 
-Every module was manually tested using FastAPI Swagger UI.
+The application was comprehensively validated through Swagger UI by exercising all CRUD operations, authentication flows, dashboard analytics, report generation, AI endpoints, and error scenarios.
 
 **Modules tested:** Authentication, Categories, Transactions, Dashboard, Budgets, Reports, PDF Export, AI Insights, AI Chat.
 
@@ -838,6 +830,8 @@ Every module was manually tested using FastAPI Swagger UI.
 
 The application can be deployed on any platform supporting FastAPI, including Render, Railway, Fly.io, Azure App Service, AWS Elastic Beanstalk, Google Cloud Run, and DigitalOcean App Platform.
 
+The application is designed to be cloud-agnostic and can be deployed to any platform supporting ASGI-based Python applications.
+
 **Deployment checklist**
 - [ ] Environment variables configured
 - [ ] PostgreSQL database available
@@ -845,31 +839,6 @@ The application can be deployed on any platform supporting FastAPI, including Re
 - [ ] Gemini API key configured
 - [ ] Dependencies installed
 - [ ] Swagger loads successfully
-
-### 🐳 Docker Support (Coming Soon)
-
-Future versions will include a Dockerfile, docker-compose.yml, multi-stage builds, a production image, and health checks.
-
----
-
-## 📸 Screenshots & Demo
-
-> Replace the placeholders below with actual screenshots after deployment.
-
-| Preview | Description |
-|---------|--------------|
-| ![Dashboard](images/dashboard.png) | Total income, total expense, current balance, recent transactions, spending analytics |
-| ![AI Insights](images/ai-insights.png) | AI-generated personalized financial analysis |
-| ![AI Chat](images/ai-chat.png) | Ask finance-related questions in natural language |
-| ![PDF Report](images/pdf-report.png) | Professional PDF report generated with ReportLab |
-
-### 🎥 Demo
-
-A short walkthrough of the project, covering registration, login, categories, transactions, budgets, dashboard analytics, AI insights, AI chat, and PDF export.
-
-<p align="center">
-  <img src="images/demo.gif" width="100%" alt="Demo">
-</p>
 
 ---
 
@@ -935,7 +904,7 @@ Contributions are welcome. If you'd like to improve FinPilot AI, feel free to fo
 1. Fork the repository.
 2. Clone your fork:
    ```bash
-   git clone https://github.com/<your-username>/FinPilot-AI.git
+   git clone [https://github.com/antrika02/finance_assistant]
    ```
 3. Create a new feature branch:
    ```bash
@@ -970,13 +939,13 @@ chore: update dependencies
 ## 👩‍💻 Author
 
 **Antrika Kashyap**
-Final Year Computer Science Student · Backend Developer · AI Enthusiast · Software Engineer
+Final Year Computer Science Student | Backend Developer | AI Engineer
 
 | Platform | Link |
 |----------|------|
-| GitHub | `https://github.com/<your-github>` |
-| LinkedIn | `https://linkedin.com/in/<your-linkedin>` |
-| Email | `your-email@example.com` |
+| GitHub | `https://github.com/antrika02>` |
+| LinkedIn | `https://www.linkedin.com/in/antrika-kashyap-070502250/>` |
+| Email | `antrikakashyap2@gmail.com` |
 
 If you found this project useful, consider giving it a ⭐ on GitHub — it helps others discover the project and motivates future improvements.
 
