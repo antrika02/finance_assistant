@@ -8,6 +8,7 @@ dependencies = [
     "alembic>=1.18.5",
     "email-validator>=2.3.0",
     "fastapi>=0.140.0",
+    "google-genai>=2.16.0",
     "loguru>=0.7.3",
     "psycopg[binary]>=3.3.4",
     "pwdlib[argon2]>=0.3.0",
@@ -15,6 +16,7 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.32",
+    "reportlab>=5.0.0",
     "sqlalchemy>=2.0.51",
     "uvicorn>=0.51.0",
 ]

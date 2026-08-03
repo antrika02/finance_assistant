@@ -20,7 +20,9 @@ from app.services.report_service import ReportService
 from app.services.export_service import ExportService
 from app.repositories.transaction_repository import TransactionRepository
 from app.services.pdf_service import PDFService
-
+from app.services.budget_service import BudgetService
+from app.services.dashboard_service import DashboardService
+from app.services.insight_service import InsightService
 
 def get_user_service(
     db: Session = Depends(get_db),
@@ -108,4 +110,22 @@ def get_pdf_service(
     return PDFService(
         DashboardRepository(db),
         TransactionRepository(db),
+    )
+
+def get_insight_service(
+    db: Session = Depends(get_db),
+) -> InsightService:
+
+    dashboard_service = DashboardService(
+        DashboardRepository(db),
+    )
+
+    budget_service = BudgetService(
+        BudgetRepository(db),
+        CategoryRepository(db),
+    )
+
+    return InsightService(
+        dashboard_service,
+        budget_service,
     )

@@ -32,6 +32,7 @@ from .budget import (
     BudgetResponse,
     BudgetStatusResponse,
 )
+from .ai import AIInsightResponse
 
 __all__ = [
     # Common
@@ -62,4 +63,5 @@ __all__ = [
     "BudgetResponse",
     "BudgetStatusResponse",
     "MonthlyReportResponse",
+    "AIInsightResponse",
 ]

@@ -33,7 +33,8 @@ class Settings(BaseSettings):
     DATABASE_NAME: str = "personal_finance"
     DATABASE_USER: str = "postgres"
     DATABASE_PASSWORD: str = "postgres"
-
+    GEMINI_API_KEY: str
+    GEMINI_MODEL: str = "gemini-3.6-flash"
     # ------------------------------------------------------------------
     # Pydantic Settings Configuration
     # ------------------------------------------------------------------
@@ -67,3 +68,4 @@ def get_settings() -> Settings:
     improving performance by avoiding repeated reads of the .env file.
     """
     return Settings()
+

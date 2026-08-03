@@ -7,4 +7,5 @@ from . import (
     reports,
     export,
     pdf,
+    ai,
 )
