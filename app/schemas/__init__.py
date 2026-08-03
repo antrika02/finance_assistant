@@ -32,7 +32,12 @@ from .budget import (
     BudgetResponse,
     BudgetStatusResponse,
 )
-from .ai import AIInsightResponse
+from .ai import (
+    AIInsightResponse,
+    ChatRequest,
+    ChatResponse,
+)
+
 
 __all__ = [
     # Common
@@ -57,11 +62,17 @@ __all__ = [
     "MonthlySummaryResponse",
     "RecentTransactionResponse",
 
-    # Budget
+   # Budget
     "BudgetCreate",
     "BudgetUpdate",
     "BudgetResponse",
     "BudgetStatusResponse",
+
+    # Report
     "MonthlyReportResponse",
+
+    # AI
     "AIInsightResponse",
+    "ChatRequest",
+    "ChatResponse",
 ]

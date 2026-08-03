@@ -8,6 +8,7 @@ from app.repositories.category_repository import CategoryRepository
 from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.dashboard_repository import DashboardRepository
 from app.repositories.budget_repository import BudgetRepository
+from app.repositories.report_repository import ReportRepository
 
 from app.services.user_service import UserService
 from app.services.auth_service import AuthService
@@ -15,14 +16,11 @@ from app.services.category_service import CategoryService
 from app.services.transaction_service import TransactionService
 from app.services.dashboard_service import DashboardService
 from app.services.budget_service import BudgetService
-from app.repositories.report_repository import ReportRepository
 from app.services.report_service import ReportService
 from app.services.export_service import ExportService
-from app.repositories.transaction_repository import TransactionRepository
 from app.services.pdf_service import PDFService
-from app.services.budget_service import BudgetService
-from app.services.dashboard_service import DashboardService
 from app.services.insight_service import InsightService
+from app.services.chat_service import ChatService
 
 def get_user_service(
     db: Session = Depends(get_db),
@@ -128,4 +126,22 @@ def get_insight_service(
     return InsightService(
         dashboard_service,
         budget_service,
+    )
+
+def get_chat_service(
+    db: Session = Depends(get_db),
+) -> ChatService:
+
+    dashboard_service = DashboardService(
+        DashboardRepository(db),
+    )
+
+    budget_service = BudgetService(
+        BudgetRepository(db),
+        CategoryRepository(db),
+    )
+
+    return ChatService(
+        dashboard_service=dashboard_service,
+        budget_service=budget_service,
     )
