@@ -83,17 +83,23 @@ class BudgetService:
             user_id=user_id,
         )
 
-        return BudgetResponse.model_validate(budget)
+        return BudgetResponse.model_validate(
+            budget
+        )
 
     def get_budgets(
         self,
         user_id: int,
     ) -> list[BudgetResponse]:
 
-        budgets = self.repository.get_by_user(user_id)
+        budgets = self.repository.get_by_user(
+            user_id
+        )
 
         return [
-            BudgetResponse.model_validate(budget)
+            BudgetResponse.model_validate(
+                budget
+            )
             for budget in budgets
         ]
 
@@ -103,7 +109,9 @@ class BudgetService:
         user_id: int,
     ) -> Budget:
 
-        budget = self.repository.get_by_id(budget_id)
+        budget = self.repository.get_by_id(
+            budget_id
+        )
 
         if budget is None:
             raise BudgetNotFoundError()
@@ -119,6 +127,22 @@ class BudgetService:
         data: BudgetUpdate,
     ) -> BudgetResponse:
 
+        if data.category_id is not None:
+
+            category = self.category_repository.get_by_id(
+                data.category_id
+            )
+
+            if category is None:
+                raise AppException(
+                    "Category not found."
+                )
+
+            if category.user_id != budget.user_id:
+                raise AppException(
+                    "You cannot use another user's category."
+                )
+
         update_data = data.model_dump(
             exclude_unset=True
         )
@@ -126,23 +150,31 @@ class BudgetService:
         for key, value in update_data.items():
             setattr(budget, key, value)
 
-        budget = self.repository.update(budget)
+        budget = self.repository.update(
+            budget
+        )
 
-        return BudgetResponse.model_validate(budget)
+        return BudgetResponse.model_validate(
+            budget
+        )
 
     def delete_budget(
         self,
         budget: Budget,
     ) -> None:
 
-        self.repository.delete(budget)
+        self.repository.delete(
+            budget
+        )
 
     def get_budget_status(
         self,
         user_id: int,
     ) -> list[BudgetStatusResponse]:
 
-        result = self.repository.get_budget_status(user_id)
+        result = self.repository.get_budget_status(
+            user_id
+        )
 
         response = []
 
@@ -184,7 +216,9 @@ class BudgetService:
         user_id: int,
     ) -> list[BudgetStatusResponse]:
 
-        result = self.repository.get_alerts(user_id)
+        result = self.repository.get_alerts(
+            user_id
+        )
 
         response = []
 
