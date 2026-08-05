@@ -1,7 +1,7 @@
 [project]
 name = "personal-finance-agent"
 version = "0.1.0"
-description = "Add your description here"
+description = "AI-powered personal finance management backend built with FastAPI, PostgreSQL, JWT Authentication, Google Gemini AI, and ReportLab."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
