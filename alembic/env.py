@@ -5,7 +5,6 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import create_engine, pool
 
-
 # ---------------------------------------------------------------------
 # Make the project root importable
 # ---------------------------------------------------------------------
@@ -16,7 +15,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 # ---------------------------------------------------------------------
 from app.core.settings import get_settings
 from app.database.session import Base
-import app.models  # Registers all ORM models with Base.metadata
+import app.models  # Registers all ORM models
 
 # ---------------------------------------------------------------------
 # Alembic Configuration
@@ -38,17 +37,15 @@ target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
     """
-    Run migrations in 'offline' mode.
-
-    This configures the context with just a database URL
-    instead of an Engine. Calls to context.execute() emit
-    the generated SQL directly.
+    Run migrations in offline mode.
     """
+
     context.configure(
-        url=settings.DATABASE_URL,
+        url=settings.SQLALCHEMY_DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        compare_type=True,
     )
 
     with context.begin_transaction():
@@ -57,14 +54,11 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """
-    Run migrations in 'online' mode.
-
-    In this mode Alembic creates a SQLAlchemy Engine and
-    associates a live database connection with the migration
-    context.
+    Run migrations in online mode.
     """
+
     connectable = create_engine(
-        settings.DATABASE_URL,
+        settings.SQLALCHEMY_DATABASE_URL,
         poolclass=pool.NullPool,
     )
 
