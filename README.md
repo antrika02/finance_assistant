@@ -88,11 +88,11 @@
 
 ## 📖 Project Overview
 
-FinPilot AI is a production-ready AI-powered backend that helps users manage their personal finances through secure authentication, intelligent budgeting, expense tracking, financial reporting, AI-generated insights, and conversational financial assistance.
+FinPilot AI is an AI-powered backendthat helps users manage their personal finances through secure authentication, intelligent budgeting, expense tracking, financial reporting, AI-generated insights, and conversational financial assistance.
 
 Unlike a traditional CRUD-based finance application, FinPilot AI combines modern backend engineering practices with Generative AI to provide actionable financial recommendations and natural language financial conversations.
 
-The project follows a scalable layered architecture using the Repository-Service Pattern, dependency injection, modular routing, and clean separation of concerns. It is designed as a portfolio-grade backend project demonstrating modern software engineering principles suitable for production environments.
+The project follows a scalable layered architecture using the Repository-Service Pattern, dependency injection, modular routing, and clean separation of concerns. It is designed as a portfolio-grade backend project demonstrating modern software engineering principles.
 
 ---
 
@@ -807,23 +807,13 @@ The application uses centralized exception handling to return consistent error r
 
 ## 🧪 Testing
 
-The application was comprehensively validated through Swagger UI by exercising all CRUD operations, authentication flows, dashboard analytics, report generation, AI endpoints, and error scenarios.
 
-**Modules tested:** Authentication, Categories, Transactions, Dashboard, Budgets, Reports, PDF Export, AI Insights, AI Chat.
+No automated test suite yet. All endpoints were manually exercised through
+Swagger UI — CRUD operations, auth flows, dashboard analytics, report
+generation, AI endpoints, and error paths.
 
-**Checklist**
-- [x] User Registration
-- [x] Login / JWT Authentication
-- [x] Category CRUD
-- [x] Transaction CRUD
-- [x] Dashboard Analytics
-- [x] Budget CRUD / Alerts
-- [x] Monthly Reports
-- [x] PDF Generation
-- [x] AI Insights
-- [x] AI Chat
-- [x] Swagger Documentation
-
+Adding pytest coverage for the service and repository layers is the next
+priority.
 ---
 
 ## ☁️ Deployment
@@ -939,12 +929,12 @@ chore: update dependencies
 ## 👩‍💻 Author
 
 **Antrika Kashyap**
-Final Year Computer Science Student | Backend Developer | AI Engineer
+Backend Developer | AI Engineer
 
 | Platform | Link |
 |----------|------|
-| GitHub | `https://github.com/antrika02>` |
-| LinkedIn | `https://www.linkedin.com/in/antrika-kashyap-070502250/>` |
+| GitHub | `https://github.com/antrika02` |
+| LinkedIn | `https://www.linkedin.com/in/antrika-kashyap-070502250/` |
 | Email | `antrikakashyap2@gmail.com` |
 
 If you found this project useful, consider giving it a ⭐ on GitHub — it helps others discover the project and motivates future improvements.
@@ -954,12 +944,6 @@ If you found this project useful, consider giving it a ⭐ on GitHub — it help
 ## 📄 License
 
 This project is licensed under the MIT License. Feel free to use it for learning, inspiration, or contribution.
-
----
-
-## 📌 Project Status
-
-🟢 **Stable** — Version `v1.0.0` — Production Ready
 
 ---
 
