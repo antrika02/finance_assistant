@@ -18,23 +18,36 @@ class Settings(BaseSettings):
 
     DEBUG: bool = True
 
-    SECRET_KEY: str
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-
     HOST: str = "0.0.0.0"
     PORT: int = 8000
 
     # ------------------------------------------------------------------
-    # Database Settings
+    # Security
     # ------------------------------------------------------------------
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
+    # ------------------------------------------------------------------
+    # Database
+    # ------------------------------------------------------------------
+
+    # Used in production (Render + Neon)
+    DATABASE_URL: str | None = None
+
+    # Used for local development
     DATABASE_HOST: str = "localhost"
     DATABASE_PORT: int = 5432
     DATABASE_NAME: str = "personal_finance"
     DATABASE_USER: str = "postgres"
     DATABASE_PASSWORD: str = "postgres"
+
+    # ------------------------------------------------------------------
+    # Gemini AI
+    # ------------------------------------------------------------------
     GEMINI_API_KEY: str
-    GEMINI_MODEL: str = "gemini-3.6-flash"
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
     # ------------------------------------------------------------------
     # Pydantic Settings Configuration
     # ------------------------------------------------------------------
@@ -46,11 +59,30 @@ class Settings(BaseSettings):
     )
 
     # ------------------------------------------------------------------
-    # Computed Fields
+    # Computed Database URL
     # ------------------------------------------------------------------
     @computed_field
     @property
-    def DATABASE_URL(self) -> str:
+    def SQLALCHEMY_DATABASE_URL(self) -> str:
+        """
+        Returns the SQLAlchemy database URL.
+
+        Priority:
+        1. DATABASE_URL (Render / Neon)
+        2. Local database credentials
+        """
+
+        if self.DATABASE_URL:
+            # Neon provides:
+            # postgresql://...
+            # SQLAlchemy expects:
+            # postgresql+psycopg://...
+            return self.DATABASE_URL.replace(
+                "postgresql://",
+                "postgresql+psycopg://",
+                1,
+            )
+
         return (
             f"postgresql+psycopg://"
             f"{self.DATABASE_USER}:{self.DATABASE_PASSWORD}"
@@ -63,9 +95,5 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """
     Returns a cached Settings instance.
-
-    The settings are loaded only once during the application's lifetime,
-    improving performance by avoiding repeated reads of the .env file.
     """
     return Settings()
-

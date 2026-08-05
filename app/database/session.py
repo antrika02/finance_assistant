@@ -7,12 +7,14 @@ settings = get_settings()
 
 
 class Base(DeclarativeBase):
-    """Base class for all ORM models."""
+    """
+    Base class for all SQLAlchemy ORM models.
+    """
     pass
 
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    settings.SQLALCHEMY_DATABASE_URL,
     echo=settings.DEBUG,
 )
 
