@@ -11,7 +11,7 @@ from app.api.v1.reports import router as reports_router
 from app.api.v1.export import router as export_router
 from app.api.v1.pdf import router as pdf_router
 from app.api.v1.ai import router as ai_router
-
+from app.api.routes.root import router as root_router
 
 api_router = APIRouter()
 
@@ -26,3 +26,4 @@ api_router.include_router(reports_router)
 api_router.include_router(export_router)
 api_router.include_router(pdf_router)
 api_router.include_router(ai_router)
+api_router.include_router(root_router)
