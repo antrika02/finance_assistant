@@ -2,12 +2,15 @@ from math import ceil
 from typing import Generic, TypeVar
 
 from pydantic import BaseModel
-from pydantic.generics import GenericModel
 
 T = TypeVar("T")
 
 
-class PaginatedResponse(GenericModel, Generic[T]):
+class PaginatedResponse(BaseModel, Generic[T]):
+    """
+    Generic paginated response model.
+    """
+
     items: list[T]
     page: int
     size: int
@@ -22,7 +25,7 @@ class PaginatedResponse(GenericModel, Generic[T]):
         page: int,
         size: int,
         total: int,
-    ):
+    ) -> "PaginatedResponse[T]":
         return cls(
             items=items,
             page=page,

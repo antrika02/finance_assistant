@@ -1,0 +1,28 @@
+import pytest
+from fastapi.testclient import TestClient
+
+from app.dependencies.database import get_db
+from app.main import app
+
+from tests.database import Base
+from tests.database import engine
+from tests.database import override_get_db
+
+# ---------------------------------------------------------
+# Override FastAPI dependency
+# ---------------------------------------------------------
+
+app.dependency_overrides[get_db] = override_get_db
+
+
+@pytest.fixture(scope="function")
+def client():
+    """
+    Returns a clean TestClient for every test.
+    """
+
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+    with TestClient(app) as test_client:
+        yield test_client

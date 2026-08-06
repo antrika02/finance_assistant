@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     Application configuration loaded from environment variables.
     """
 
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     # Application
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     APP_NAME: str = "FinPilot AI"
     APP_VERSION: str = "1.0.0"
     APP_ENV: str = "development"
@@ -21,17 +21,19 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
 
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     # Security
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     # Database
-    # ------------------------------------------------------------------
-    DATABASE_URL: str | None = None
+    # --------------------------------------------------
+
+    # Optional full connection string (used in production)
+    DATABASE_URL_OVERRIDE: str | None = None
 
     DATABASE_HOST: str = "localhost"
     DATABASE_PORT: int = 5432
@@ -39,15 +41,15 @@ class Settings(BaseSettings):
     DATABASE_USER: str = "postgres"
     DATABASE_PASSWORD: str = "postgres"
 
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     # Gemini
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     GEMINI_API_KEY: str
     GEMINI_MODEL: str = "gemini-2.5-flash"
 
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     # CORS
-    # ------------------------------------------------------------------
+    # --------------------------------------------------
     BACKEND_CORS_ORIGINS: str = "*"
 
     model_config = SettingsConfigDict(
@@ -59,13 +61,15 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
-    def SQLALCHEMY_DATABASE_URL(self) -> str:
+    def DATABASE_URL(self) -> str:
         """
-        Use DATABASE_URL if provided (Render/Neon),
-        otherwise construct one from local credentials.
+        Returns the database connection string.
+
+        Uses DATABASE_URL_OVERRIDE when provided (Render/Neon),
+        otherwise constructs a local PostgreSQL URL.
         """
-        if self.DATABASE_URL:
-            return self.DATABASE_URL
+        if self.DATABASE_URL_OVERRIDE:
+            return self.DATABASE_URL_OVERRIDE
 
         return (
             f"postgresql+psycopg://"

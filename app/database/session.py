@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 
 
 engine = create_engine(
-    settings.SQLALCHEMY_DATABASE_URL,
+    settings.DATABASE_URL,
     echo=settings.DEBUG,
 )
 
