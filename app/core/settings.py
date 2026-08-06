@@ -10,13 +10,13 @@ class Settings(BaseSettings):
     """
 
     # ------------------------------------------------------------------
-    # Application Settings
+    # Application
     # ------------------------------------------------------------------
     APP_NAME: str = "FinPilot AI"
     APP_VERSION: str = "1.0.0"
     APP_ENV: str = "development"
 
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     HOST: str = "0.0.0.0"
     PORT: int = 8000
@@ -31,11 +31,8 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Database
     # ------------------------------------------------------------------
-
-    # Used in production (Render + Neon)
     DATABASE_URL: str | None = None
 
-    # Used for local development
     DATABASE_HOST: str = "localhost"
     DATABASE_PORT: int = 5432
     DATABASE_NAME: str = "personal_finance"
@@ -43,14 +40,16 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str = "postgres"
 
     # ------------------------------------------------------------------
-    # Gemini AI
+    # Gemini
     # ------------------------------------------------------------------
     GEMINI_API_KEY: str
     GEMINI_MODEL: str = "gemini-2.5-flash"
 
     # ------------------------------------------------------------------
-    # Pydantic Settings Configuration
+    # CORS
     # ------------------------------------------------------------------
+    BACKEND_CORS_ORIGINS: str = "*"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -58,30 +57,15 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # ------------------------------------------------------------------
-    # Computed Database URL
-    # ------------------------------------------------------------------
     @computed_field
     @property
     def SQLALCHEMY_DATABASE_URL(self) -> str:
         """
-        Returns the SQLAlchemy database URL.
-
-        Priority:
-        1. DATABASE_URL (Render / Neon)
-        2. Local database credentials
+        Use DATABASE_URL if provided (Render/Neon),
+        otherwise construct one from local credentials.
         """
-
         if self.DATABASE_URL:
-            # Neon provides:
-            # postgresql://...
-            # SQLAlchemy expects:
-            # postgresql+psycopg://...
-            return self.DATABASE_URL.replace(
-                "postgresql://",
-                "postgresql+psycopg://",
-                1,
-            )
+            return self.DATABASE_URL
 
         return (
             f"postgresql+psycopg://"
@@ -93,7 +77,4 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    """
-    Returns a cached Settings instance.
-    """
     return Settings()
