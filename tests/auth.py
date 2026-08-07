@@ -1,8 +1,15 @@
-from tests.factories import user_payload
+from tests.factories import (
+    category_payload,
+    transaction_payload,
+    user_payload,
+)
 
 
-def register_user(client):
-    payload = user_payload()
+def register_user(client, **kwargs):
+    """
+    Register a new test user.
+    """
+    payload = user_payload(**kwargs)
 
     response = client.post(
         "/auth/register",
@@ -15,6 +22,9 @@ def register_user(client):
 
 
 def login_user(client, payload):
+    """
+    Login an existing user.
+    """
     response = client.post(
         "/auth/login",
         data={
@@ -28,11 +38,56 @@ def login_user(client, payload):
     return response.json()["access_token"]
 
 
-def auth_headers(client):
-    payload = register_user(client)
+def auth_headers(client, **kwargs):
+    """
+    Returns Authorization headers.
+    """
+    payload = register_user(client, **kwargs)
 
     token = login_user(client, payload)
 
     return {
         "Authorization": f"Bearer {token}"
     }
+
+
+def create_category(client, headers, **kwargs):
+    """
+    Creates a category and returns its JSON.
+    """
+    payload = category_payload(**kwargs)
+
+    response = client.post(
+        "/categories/",
+        json=payload,
+        headers=headers,
+    )
+
+    assert response.status_code == 201
+
+    return response.json()
+
+
+def create_transaction(
+    client,
+    headers,
+    category_id,
+    **kwargs,
+):
+    """
+    Creates a transaction and returns its JSON.
+    """
+    payload = transaction_payload(
+        category_id=category_id,
+        **kwargs,
+    )
+
+    response = client.post(
+        "/transactions/",
+        json=payload,
+        headers=headers,
+    )
+
+    assert response.status_code == 201
+
+    return response.json()

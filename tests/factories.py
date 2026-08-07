@@ -6,10 +6,6 @@ def user_payload(
     email: str | None = None,
     password: str = "Password123!",
 ):
-    """
-    Returns a valid registration payload.
-    """
-
     return {
         "full_name": full_name,
         "email": email or f"{uuid4().hex}@example.com",
@@ -17,20 +13,31 @@ def user_payload(
     }
 
 
-def category_payload():
+def category_payload(
+    name="Food",
+    type="expense",
+    icon="🍕",
+    color="#FF5733",
+):
     return {
-        "name": "Food",
-        "type": "expense",
-        "icon": "🍕",
-        "color": "#FF5733",
+        "name": name,
+        "type": type,
+        "icon": icon,
+        "color": color,
     }
 
 
-def transaction_payload(category_id: int):
+def transaction_payload(
+    category_id: int,
+    amount=250,
+    type="expense",
+    description="Lunch",
+    transaction_date="2026-08-01",
+):
     return {
-        "amount": 250,
-        "type": "expense",
-        "description": "Lunch",
-        "transaction_date": "2026-08-01",
+        "amount": amount,
+        "type": type,
+        "description": description,
+        "transaction_date": transaction_date,
         "category_id": category_id,
     }
