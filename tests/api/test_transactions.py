@@ -148,3 +148,40 @@ def test_delete_transaction(
     )
 
     assert response.status_code == 404
+
+
+def test_transaction_not_found(
+    client,
+    authenticated_headers,
+):
+    response = client.get(
+        "/transactions/99999",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 404
+
+def test_invalid_category(
+    client,
+    authenticated_headers,
+):
+    response = client.post(
+        "/transactions/",
+        json={
+            "amount": 100,
+            "type": "expense",
+            "description": "Lunch",
+            "transaction_date": "2026-08-01",
+            "category_id": 99999,
+        },
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 400
+
+def test_get_transactions_without_token(
+    client,
+):
+    response = client.get("/transactions/")
+
+    assert response.status_code == 401
