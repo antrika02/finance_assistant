@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from app.models import Transaction
 from app.repositories.base_repository import BaseRepository
 from app.schemas import TransactionFilters, TransactionSort
+from decimal import Decimal
 
+from sqlalchemy import func, select
 
 class TransactionRepository(BaseRepository[Transaction]):
 
@@ -143,34 +145,58 @@ class TransactionRepository(BaseRepository[Transaction]):
 
         user_id: int,
 
-    ) -> tuple[float, float]:
+    ) -> tuple[Decimal, Decimal]:
 
-        income_statement = select(
+        income_statement = (
 
-            func.coalesce(func.sum(Transaction.amount), 0)
+            select(
 
-        ).where(
+                func.coalesce(
 
-            Transaction.user_id == user_id,
+                    func.sum(Transaction.amount),
 
-            Transaction.type == "income",
+                    Decimal("0"),
+
+                )
+
+            )
+
+            .where(
+
+                Transaction.user_id == user_id,
+
+                Transaction.type == "income",
+
+            )
 
         )
 
-        expense_statement = select(
+        expense_statement = (
 
-            func.coalesce(func.sum(Transaction.amount), 0)
+            select(
 
-        ).where(
+                func.coalesce(
 
-            Transaction.user_id == user_id,
+                    func.sum(Transaction.amount),
 
-            Transaction.type == "expense",
+                    Decimal("0"),
+
+                )
+
+            )
+
+            .where(
+
+                Transaction.user_id == user_id,
+
+                Transaction.type == "expense",
+
+            )
 
         )
 
-        income = self.db.scalar(income_statement) or 0
+        income = self.db.scalar(income_statement) or Decimal("0")
 
-        expense = self.db.scalar(expense_statement) or 0
+        expense = self.db.scalar(expense_statement) or Decimal("0")
 
-        return float(income), float(expense)
+        return income, expense

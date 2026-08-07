@@ -2,7 +2,7 @@ from tests.auth import (
     create_category,
     create_transaction,
 )
-
+from decimal import Decimal
 from tests.fixtures.users import create_authenticated_user
 
 from tests.fixtures.categories import create_user_category
@@ -232,3 +232,168 @@ def test_cannot_access_other_users_transaction(client):
     )
 
     assert response.status_code == 403
+
+def test_transaction_pagination(
+    client,
+    authenticated_headers,
+):
+    category = create_category(
+        client,
+        authenticated_headers,
+    )
+
+    for i in range(25):
+        create_transaction(
+            client,
+            authenticated_headers,
+            category["id"],
+        )
+
+    response = client.get(
+        "/transactions?page=1&size=10",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 200
+
+    body = response.json()
+
+    assert len(body["items"]) == 10
+    assert body["page"] == 1
+    assert body["size"] == 10
+    assert body["total"] == 25
+    assert body["pages"] == 3
+
+
+def test_filter_transactions_by_type(
+    client,
+    authenticated_headers,
+):
+    category = create_category(
+        client,
+        authenticated_headers,
+    )
+
+    create_transaction(
+        client,
+        authenticated_headers,
+        category["id"],
+    )
+
+    client.post(
+        "/transactions/",
+        json={
+            "amount": 1000,
+            "type": "income",
+            "description": "Salary",
+            "transaction_date": "2026-08-01",
+            "category_id": category["id"],
+        },
+        headers=authenticated_headers,
+    )
+
+    response = client.get(
+        "/transactions?type=income",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 200
+
+    body = response.json()
+
+    assert len(body["items"]) == 1
+    assert body["items"][0]["type"] == "income"
+
+def test_search_transactions(
+    client,
+    authenticated_headers,
+):
+    category = create_category(
+        client,
+        authenticated_headers,
+    )
+
+    client.post(
+        "/transactions/",
+        json={
+            "amount": 200,
+            "type": "expense",
+            "description": "Pizza",
+            "transaction_date": "2026-08-01",
+            "category_id": category["id"],
+        },
+        headers=authenticated_headers,
+    )
+
+    client.post(
+        "/transactions/",
+        json={
+            "amount": 300,
+            "type": "expense",
+            "description": "Movie",
+            "transaction_date": "2026-08-01",
+            "category_id": category["id"],
+        },
+        headers=authenticated_headers,
+    )
+
+    response = client.get(
+        "/transactions?search=Pizza",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 200
+
+    body = response.json()
+
+    assert len(body["items"]) == 1
+    assert body["items"][0]["description"] == "Pizza"
+
+
+def test_transaction_summary(
+    client,
+    authenticated_headers,
+):
+    category = create_category(
+        client,
+        authenticated_headers,
+    )
+
+    client.post(
+        "/transactions/",
+        json={
+            "amount": 1000,
+            "type": "income",
+            "description": "Salary",
+            "transaction_date": "2026-08-01",
+            "category_id": category["id"],
+        },
+        headers=authenticated_headers,
+    )
+
+    client.post(
+        "/transactions/",
+        json={
+            "amount": 400,
+            "type": "expense",
+            "description": "Rent",
+            "transaction_date": "2026-08-01",
+            "category_id": category["id"],
+        },
+        headers=authenticated_headers,
+    )
+
+    response = client.get(
+        "/transactions/summary",
+        headers=authenticated_headers,
+    )
+
+    assert response.status_code == 200
+
+    body = response.json()
+
+    from decimal import Decimal
+
+    assert Decimal(body["total_income"]) == Decimal("1000")
+    assert Decimal(body["total_expense"]) == Decimal("400")
+    assert Decimal(body["balance"]) == Decimal("600")
