@@ -5,15 +5,34 @@ from tests.factories import (
 )
 
 
-def register_user(client, **kwargs):
-    """
-    Register a new test user.
-    """
-    payload = user_payload(**kwargs)
+def register_user(
+
+    client,
+
+    full_name="John Doe",
+
+    email=None,
+
+    password="Password123!",
+
+):
+
+    payload = user_payload(
+
+        full_name=full_name,
+
+        email=email,
+
+        password=password,
+
+    )
 
     response = client.post(
+
         "/auth/register",
+
         json=payload,
+
     )
 
     assert response.status_code == 201
@@ -38,11 +57,18 @@ def login_user(client, payload):
     return response.json()["access_token"]
 
 
-def auth_headers(client, **kwargs):
-    """
-    Returns Authorization headers.
-    """
-    payload = register_user(client, **kwargs)
+def auth_headers(
+    client,
+    full_name="John Doe",
+    email=None,
+    password="Password123!",
+):
+    payload = register_user(
+        client,
+        full_name=full_name,
+        email=email,
+        password=password,
+    )
 
     token = login_user(client, payload)
 

@@ -3,6 +3,12 @@ from tests.auth import (
     create_transaction,
 )
 
+from tests.fixtures.users import create_authenticated_user
+
+from tests.fixtures.categories import create_user_category
+
+from tests.fixtures.transactions import create_user_transaction
+
 
 def test_create_transaction(
     client,
@@ -185,3 +191,44 @@ def test_get_transactions_without_token(
     response = client.get("/transactions/")
 
     assert response.status_code == 401
+
+
+def test_cannot_access_other_users_transaction(client):
+
+    user1 = create_authenticated_user(client)
+
+    user2 = create_authenticated_user(
+
+        client,
+
+        email="another@example.com",
+
+    )
+
+    category = create_user_category(
+
+        client,
+
+        user1,
+
+    )
+
+    transaction = create_user_transaction(
+
+        client,
+
+        user1,
+
+        category["id"],
+
+    )
+
+    response = client.get(
+
+        f"/transactions/{transaction['id']}",
+
+        headers=user2.headers,
+
+    )
+
+    assert response.status_code == 403
