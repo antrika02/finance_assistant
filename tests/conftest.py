@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from app.dependencies.database import get_db
 from app.main import app
 
+from tests.auth import auth_headers
 from tests.database import Base
 from tests.database import engine
 from tests.database import override_get_db
@@ -26,3 +27,11 @@ def client():
 
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture(scope="function")
+def authenticated_headers(client):
+    """
+    Returns JWT authentication headers for a test user.
+    """
+    return auth_headers(client)
