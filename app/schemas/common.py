@@ -1,12 +1,9 @@
 from math import ceil
-from typing import Generic, TypeVar
 
 from pydantic import BaseModel
 
-T = TypeVar("T")
 
-
-class PaginatedResponse(BaseModel, Generic[T]):
+class PaginatedResponse[T](BaseModel):
     """
     Generic paginated response model.
     """

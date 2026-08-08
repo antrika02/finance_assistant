@@ -6,6 +6,6 @@ from .category import (
 
 __all__ = [
     "AppException",
-    "CategoryNotFoundError",
     "CategoryAccessDeniedError",
+    "CategoryNotFoundError",
 ]

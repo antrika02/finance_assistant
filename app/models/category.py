@@ -9,9 +9,9 @@ from app.enums import CategoryType
 from app.models.base import TimestampMixin
 
 if TYPE_CHECKING:
-    from app.models.user import User
-    from app.models.transaction import Transaction
     from app.models.budget import Budget
+    from app.models.transaction import Transaction
+    from app.models.user import User
 
 
 class Category(TimestampMixin, Base):

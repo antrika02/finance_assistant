@@ -3,11 +3,8 @@ from fastapi.testclient import TestClient
 
 from app.dependencies.database import get_db
 from app.main import app
-
 from tests.auth import auth_headers
-from tests.database import Base
-from tests.database import engine
-from tests.database import override_get_db
+from tests.database import Base, engine, override_get_db
 
 # ---------------------------------------------------------
 # Override FastAPI dependency

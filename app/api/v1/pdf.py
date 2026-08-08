@@ -18,15 +18,10 @@ def download_pdf(
     service: PDFService = Depends(get_pdf_service),
 ):
 
-    pdf = service.generate_report(
-        current_user.id
-    )
+    pdf = service.generate_report(current_user.id)
 
     return Response(
         content=pdf,
         media_type="application/pdf",
-        headers={
-            "Content-Disposition":
-            "attachment; filename=finance_report.pdf"
-        },
+        headers={"Content-Disposition": "attachment; filename=finance_report.pdf"},
     )

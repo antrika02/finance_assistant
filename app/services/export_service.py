@@ -5,7 +5,6 @@ from app.repositories.transaction_repository import TransactionRepository
 
 
 class ExportService:
-
     def __init__(
         self,
         repository: TransactionRepository,
@@ -40,7 +39,6 @@ class ExportService:
         )
 
         for transaction in transactions:
-
             writer.writerow(
                 [
                     transaction.transaction_date,

@@ -4,13 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.database.session import Base
-
 # IMPORTANT: Import all ORM models BEFORE create_all()
-import app.models.user
-import app.models.category
-import app.models.transaction
-import app.models.budget
+from app.database.session import Base
 
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 

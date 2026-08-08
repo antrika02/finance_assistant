@@ -6,7 +6,6 @@ from app.models import Category, Transaction
 
 
 class DashboardRepository:
-
     def __init__(self, db: Session):
         self.db = db
 
@@ -108,9 +107,7 @@ class DashboardRepository:
             )
         ).label("expense")
 
-        balance = (
-            income - expense
-        ).label("balance")
+        balance = (income - expense).label("balance")
 
         statement = (
             select(
@@ -157,9 +154,7 @@ class DashboardRepository:
             .where(
                 Transaction.user_id == user_id,
             )
-            .order_by(
-                Transaction.transaction_date.desc()
-            )
+            .order_by(Transaction.transaction_date.desc())
             .limit(5)
         )
 

@@ -1,12 +1,12 @@
 from io import BytesIO
 
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import (
     Paragraph,
     SimpleDocTemplate,
     Spacer,
 )
-from reportlab.lib.styles import getSampleStyleSheet
 
 from app.repositories.dashboard_repository import DashboardRepository
 from app.repositories.transaction_repository import (
@@ -15,7 +15,6 @@ from app.repositories.transaction_repository import (
 
 
 class PDFService:
-
     def __init__(
         self,
         dashboard_repository: DashboardRepository,
@@ -93,7 +92,6 @@ class PDFService:
         )
 
         for transaction in transactions:
-
             story.append(
                 Paragraph(
                     f"{transaction.transaction_date} | "

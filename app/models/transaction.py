@@ -2,7 +2,8 @@ from datetime import date
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Date, Enum as SQLEnum, ForeignKey, Numeric, String
+from sqlalchemy import Date, ForeignKey, Numeric, String
+from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.session import Base

@@ -30,11 +30,7 @@ def get_ai_insights(
         get_insight_service,
     ),
 ):
-    return AIInsightResponse(
-        insights=service.generate_insights(
-            current_user.id
-        )
-    )
+    return AIInsightResponse(insights=service.generate_insights(current_user.id))
 
 
 @router.post(

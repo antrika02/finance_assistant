@@ -3,6 +3,6 @@ from .sorting import TransactionSort
 
 __all__ = [
     "PaginationParams",
-    "get_pagination",
     "TransactionSort",
+    "get_pagination",
 ]

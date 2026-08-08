@@ -94,6 +94,7 @@ def delete_budget(
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
+
 @router.get(
     "/alerts",
     response_model=list[BudgetStatusResponse],

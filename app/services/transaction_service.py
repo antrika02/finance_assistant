@@ -27,13 +27,10 @@ class TransactionAccessDeniedError(AppException):
     status_code = 403
 
     def __init__(self):
-        super().__init__(
-            "You do not have permission to access this transaction."
-        )
+        super().__init__("You do not have permission to access this transaction.")
 
 
 class TransactionService:
-
     def __init__(
         self,
         repository: TransactionRepository,
@@ -48,17 +45,13 @@ class TransactionService:
         user_id: int,
     ) -> TransactionResponse:
 
-        category = self.category_repository.get_by_id(
-            data.category_id
-        )
+        category = self.category_repository.get_by_id(data.category_id)
 
         if category is None:
             raise AppException("Category not found.")
 
         if category.user_id != user_id:
-            raise AppException(
-                "You cannot use another user's category."
-            )
+            raise AppException("You cannot use another user's category.")
 
         transaction = self.repository.create(
             amount=data.amount,
@@ -69,9 +62,7 @@ class TransactionService:
             user_id=user_id,
         )
 
-        return TransactionResponse.model_validate(
-            transaction
-        )
+        return TransactionResponse.model_validate(transaction)
 
     def get_transactions(
         self,
@@ -95,15 +86,11 @@ class TransactionService:
         )
 
         items = [
-            TransactionResponse.model_validate(
-                transaction
-            )
+            TransactionResponse.model_validate(transaction)
             for transaction in transactions
         ]
 
-        return PaginatedResponse[
-            TransactionResponse
-        ].create(
+        return PaginatedResponse[TransactionResponse].create(
             items=items,
             page=pagination.page,
             size=pagination.size,
@@ -116,9 +103,7 @@ class TransactionService:
         user_id: int,
     ) -> Transaction:
 
-        transaction = self.repository.get_by_id(
-            transaction_id
-        )
+        transaction = self.repository.get_by_id(transaction_id)
 
         if transaction is None:
             raise TransactionNotFoundError()
@@ -135,35 +120,22 @@ class TransactionService:
     ) -> TransactionResponse:
 
         if data.category_id is not None:
-
-            category = self.category_repository.get_by_id(
-                data.category_id
-            )
+            category = self.category_repository.get_by_id(data.category_id)
 
             if category is None:
-                raise AppException(
-                    "Category not found."
-                )
+                raise AppException("Category not found.")
 
             if category.user_id != transaction.user_id:
-                raise AppException(
-                    "You cannot use another user's category."
-                )
+                raise AppException("You cannot use another user's category.")
 
-        update_data = data.model_dump(
-            exclude_unset=True
-        )
+        update_data = data.model_dump(exclude_unset=True)
 
         for key, value in update_data.items():
             setattr(transaction, key, value)
 
-        transaction = self.repository.update(
-            transaction
-        )
+        transaction = self.repository.update(transaction)
 
-        return TransactionResponse.model_validate(
-            transaction
-        )
+        return TransactionResponse.model_validate(transaction)
 
     def delete_transaction(
         self,
@@ -177,9 +149,7 @@ class TransactionService:
         user_id: int,
     ) -> SummaryResponse:
 
-        income, expense = self.repository.get_summary(
-            user_id
-        )
+        income, expense = self.repository.get_summary(user_id)
 
         return SummaryResponse(
             total_income=income,

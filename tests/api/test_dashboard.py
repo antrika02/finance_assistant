@@ -43,9 +43,9 @@ def test_dashboard_summary_empty(
 
     body = response.json()
 
-    assert Decimal(body["total_income"]) == Decimal("0")
-    assert Decimal(body["total_expense"]) == Decimal("0")
-    assert Decimal(body["current_balance"]) == Decimal("0")
+    assert Decimal(body["total_income"]) == Decimal(0)
+    assert Decimal(body["total_expense"]) == Decimal(0)
+    assert Decimal(body["current_balance"]) == Decimal(0)
     assert body["total_transactions"] == 0
 
 
@@ -97,9 +97,9 @@ def test_dashboard_summary(
 
     body = response.json()
 
-    assert Decimal(body["total_income"]) == Decimal("5000")
-    assert Decimal(body["total_expense"]) == Decimal("2000")
-    assert Decimal(body["current_balance"]) == Decimal("3000")
+    assert Decimal(body["total_income"]) == Decimal(5000)
+    assert Decimal(body["total_expense"]) == Decimal(2000)
+    assert Decimal(body["current_balance"]) == Decimal(3000)
     assert body["total_transactions"] == 3
 
 
@@ -169,10 +169,10 @@ def test_dashboard_category_breakdown(
     assert len(body) == 2
 
     assert body[0]["category"] == "Travel"
-    assert Decimal(body[0]["amount"]) == Decimal("1000")
+    assert Decimal(body[0]["amount"]) == Decimal(1000)
 
     assert body[1]["category"] == "Food"
-    assert Decimal(body[1]["amount"]) == Decimal("800")
+    assert Decimal(body[1]["amount"]) == Decimal(800)
 
 
 def test_dashboard_category_breakdown_excludes_income(
@@ -214,7 +214,7 @@ def test_dashboard_category_breakdown_excludes_income(
     body = response.json()
 
     assert len(body) == 1
-    assert Decimal(body[0]["amount"]) == Decimal("500")
+    assert Decimal(body[0]["amount"]) == Decimal(500)
 
 
 def test_dashboard_monthly_summary(
@@ -278,14 +278,14 @@ def test_dashboard_monthly_summary(
     assert len(body) == 2
 
     assert body[0]["month"] == "2026-07"
-    assert Decimal(body[0]["income"]) == Decimal("3000")
-    assert Decimal(body[0]["expense"]) == Decimal("1000")
-    assert Decimal(body[0]["balance"]) == Decimal("2000")
+    assert Decimal(body[0]["income"]) == Decimal(3000)
+    assert Decimal(body[0]["expense"]) == Decimal(1000)
+    assert Decimal(body[0]["balance"]) == Decimal(2000)
 
     assert body[1]["month"] == "2026-08"
-    assert Decimal(body[1]["income"]) == Decimal("5000")
-    assert Decimal(body[1]["expense"]) == Decimal("2000")
-    assert Decimal(body[1]["balance"]) == Decimal("3000")
+    assert Decimal(body[1]["income"]) == Decimal(5000)
+    assert Decimal(body[1]["expense"]) == Decimal(2000)
+    assert Decimal(body[1]["balance"]) == Decimal(3000)
 
 
 def test_dashboard_recent_transactions(
@@ -370,17 +370,14 @@ def test_dashboard_top_spending_categories(
 
     assert len(body) == 5
 
-    returned_amounts = [
-        Decimal(item["amount"])
-        for item in body
-    ]
+    returned_amounts = [Decimal(item["amount"]) for item in body]
 
     assert returned_amounts == [
-        Decimal("600"),
-        Decimal("500"),
-        Decimal("400"),
-        Decimal("300"),
-        Decimal("200"),
+        Decimal(600),
+        Decimal(500),
+        Decimal(400),
+        Decimal(300),
+        Decimal(200),
     ]
 
 

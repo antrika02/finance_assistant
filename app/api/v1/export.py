@@ -18,15 +18,10 @@ def export_csv(
     service: ExportService = Depends(get_export_service),
 ):
 
-    csv_data = service.export_transactions_csv(
-        current_user.id
-    )
+    csv_data = service.export_transactions_csv(current_user.id)
 
     return Response(
         content=csv_data,
         media_type="text/csv",
-        headers={
-            "Content-Disposition":
-            "attachment; filename=transactions.csv"
-        },
+        headers={"Content-Disposition": "attachment; filename=transactions.csv"},
     )

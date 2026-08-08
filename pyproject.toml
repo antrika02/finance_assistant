@@ -26,4 +26,11 @@ dev = [
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "httpx>=0.28.1",
+    "ruff>=0.16.2",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+ignore = ["B008"]

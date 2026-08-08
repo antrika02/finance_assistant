@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import text
+
 from app.core.logging import logger
 from app.core.settings import get_settings
 from app.database.session import engine
@@ -31,7 +32,7 @@ def health_check() -> HealthResponse:
             version=settings.APP_VERSION,
         )
 
-    except Exception as exc:
+    except Exception:  # noqa: BLE001
         logger.exception("Health check failed.")
 
         raise HTTPException(

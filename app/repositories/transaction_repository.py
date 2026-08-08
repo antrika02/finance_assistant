@@ -1,15 +1,14 @@
+from decimal import Decimal
+
 from sqlalchemy import asc, desc, func, select
 from sqlalchemy.orm import Session
 
 from app.models import Transaction
 from app.repositories.base_repository import BaseRepository
 from app.schemas import TransactionFilters, TransactionSort
-from decimal import Decimal
 
-from sqlalchemy import func, select
 
 class TransactionRepository(BaseRepository[Transaction]):
-
     def __init__(self, db: Session):
         super().__init__(db, Transaction)
 
@@ -22,19 +21,13 @@ class TransactionRepository(BaseRepository[Transaction]):
         sort: TransactionSort | None = None,
     ) -> list[Transaction]:
 
-        statement = (
-            select(Transaction)
-            .where(Transaction.user_id == user_id)
-        )
+        statement = select(Transaction).where(Transaction.user_id == user_id)
 
         # Apply Filters
 
         if filters:
-
             if filters.type:
-                statement = statement.where(
-                    Transaction.type == filters.type
-                )
+                statement = statement.where(Transaction.type == filters.type)
 
             if filters.category_id:
                 statement = statement.where(
@@ -52,14 +45,11 @@ class TransactionRepository(BaseRepository[Transaction]):
                 )
             if filters.search:
                 statement = statement.where(
-                    Transaction.description.ilike(
-                        f"%{filters.search}%"
-                    )
+                    Transaction.description.ilike(f"%{filters.search}%")
                 )
 
         # Apply Sorting
         if sort:
-
             sort_column = getattr(
                 Transaction,
                 sort.field,
@@ -67,27 +57,16 @@ class TransactionRepository(BaseRepository[Transaction]):
             )
 
             if sort.descending:
-                statement = statement.order_by(
-                    desc(sort_column)
-                )
+                statement = statement.order_by(desc(sort_column))
             else:
-                statement = statement.order_by(
-                    asc(sort_column)
-                )
+                statement = statement.order_by(asc(sort_column))
 
         else:
-
-            statement = statement.order_by(
-                Transaction.transaction_date.desc()
-            )
+            statement = statement.order_by(Transaction.transaction_date.desc())
 
         # Apply Pagination
 
-        statement = (
-            statement
-            .offset(offset)
-            .limit(limit)
-        )
+        statement = statement.offset(offset).limit(limit)
 
         result = self.db.execute(statement)
 
@@ -107,11 +86,8 @@ class TransactionRepository(BaseRepository[Transaction]):
         # Apply Filters
 
         if filters:
-
             if filters.type:
-                statement = statement.where(
-                    Transaction.type == filters.type
-                )
+                statement = statement.where(Transaction.type == filters.type)
 
             if filters.category_id:
                 statement = statement.where(
@@ -130,9 +106,7 @@ class TransactionRepository(BaseRepository[Transaction]):
 
             if filters.search:
                 statement = statement.where(
-                    Transaction.description.ilike(
-                        f"%{filters.search}%"
-                    )
+                    Transaction.description.ilike(f"%{filters.search}%")
                 )
 
         result = self.db.execute(statement)
@@ -140,63 +114,32 @@ class TransactionRepository(BaseRepository[Transaction]):
         return result.scalar_one()
 
     def get_summary(
-
         self,
-
         user_id: int,
-
     ) -> tuple[Decimal, Decimal]:
 
-        income_statement = (
-
-            select(
-
-                func.coalesce(
-
-                    func.sum(Transaction.amount),
-
-                    Decimal("0"),
-
-                )
-
+        income_statement = select(
+            func.coalesce(
+                func.sum(Transaction.amount),
+                Decimal(0),
             )
-
-            .where(
-
-                Transaction.user_id == user_id,
-
-                Transaction.type == "income",
-
-            )
-
+        ).where(
+            Transaction.user_id == user_id,
+            Transaction.type == "income",
         )
 
-        expense_statement = (
-
-            select(
-
-                func.coalesce(
-
-                    func.sum(Transaction.amount),
-
-                    Decimal("0"),
-
-                )
-
+        expense_statement = select(
+            func.coalesce(
+                func.sum(Transaction.amount),
+                Decimal(0),
             )
-
-            .where(
-
-                Transaction.user_id == user_id,
-
-                Transaction.type == "expense",
-
-            )
-
+        ).where(
+            Transaction.user_id == user_id,
+            Transaction.type == "expense",
         )
 
-        income = self.db.scalar(income_statement) or Decimal("0")
+        income = self.db.scalar(income_statement) or Decimal(0)
 
-        expense = self.db.scalar(expense_statement) or Decimal("0")
+        expense = self.db.scalar(expense_statement) or Decimal(0)
 
         return income, expense

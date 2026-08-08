@@ -4,8 +4,8 @@ from app.auth.dependencies import get_current_user
 from app.dependencies.services import get_dashboard_service
 from app.models import User
 from app.schemas.dashboard import (
-    DashboardSummaryResponse,
     CategoryBreakdownResponse,
+    DashboardSummaryResponse,
     MonthlySummaryResponse,
     RecentTransactionResponse,
 )

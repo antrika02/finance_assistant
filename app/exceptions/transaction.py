@@ -10,13 +10,9 @@ class TransactionNotFoundError(AppException):
 
 class TransactionAccessDeniedError(AppException):
     status_code = status.HTTP_403_FORBIDDEN
-    default_message = (
-        "You do not have permission to access this transaction."
-    )
+    default_message = "You do not have permission to access this transaction."
 
 
 class InvalidTransactionCategoryError(AppException):
     status_code = status.HTTP_400_BAD_REQUEST
-    default_message = (
-        "The selected category is invalid."
-    )
+    default_message = "The selected category is invalid."

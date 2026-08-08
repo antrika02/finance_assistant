@@ -80,9 +80,7 @@ def test_update_category(
 
     response = client.put(
         f"/categories/{category_id}",
-        json={
-            "name": "Groceries"
-        },
+        json={"name": "Groceries"},
         headers=authenticated_headers,
     )
 

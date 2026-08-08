@@ -17,9 +17,7 @@ def test_get_ai_insights(
         "You are spending more on food this month."
     )
 
-    app.dependency_overrides[
-        get_insight_service
-    ] = lambda: mock_service
+    app.dependency_overrides[get_insight_service] = lambda: mock_service
 
     try:
         response = client.get(
@@ -31,15 +29,11 @@ def test_get_ai_insights(
 
         body = response.json()
 
-        assert body["insights"] == (
-            "You are spending more on food this month."
-        )
+        assert body["insights"] == ("You are spending more on food this month.")
 
         mock_service.generate_insights.assert_called_once()
 
-        user_id = (
-            mock_service.generate_insights.call_args.args[0]
-        )
+        user_id = mock_service.generate_insights.call_args.args[0]
 
         assert isinstance(user_id, int)
 
@@ -55,9 +49,7 @@ def test_get_ai_insights_without_token(
 ):
     mock_service = Mock()
 
-    app.dependency_overrides[
-        get_insight_service
-    ] = lambda: mock_service
+    app.dependency_overrides[get_insight_service] = lambda: mock_service
 
     try:
         response = client.get(
@@ -81,20 +73,14 @@ def test_chat_with_ai(
 ):
     mock_service = Mock()
 
-    mock_service.chat.return_value = (
-        "Your largest expense this month is rent."
-    )
+    mock_service.chat.return_value = "Your largest expense this month is rent."
 
-    app.dependency_overrides[
-        get_chat_service
-    ] = lambda: mock_service
+    app.dependency_overrides[get_chat_service] = lambda: mock_service
 
     try:
         response = client.post(
             "/ai/chat",
-            json={
-                "message": "What is my biggest expense?"
-            },
+            json={"message": "What is my biggest expense?"},
             headers=authenticated_headers,
         )
 
@@ -102,25 +88,18 @@ def test_chat_with_ai(
 
         body = response.json()
 
-        assert body["response"] == (
-            "Your largest expense this month is rent."
-        )
+        assert body["response"] == ("Your largest expense this month is rent.")
 
         mock_service.chat.assert_called_once()
 
-        call_kwargs = (
-            mock_service.chat.call_args.kwargs
-        )
+        call_kwargs = mock_service.chat.call_args.kwargs
 
         assert isinstance(
             call_kwargs["user_id"],
             int,
         )
 
-        assert (
-            call_kwargs["message"]
-            == "What is my biggest expense?"
-        )
+        assert call_kwargs["message"] == "What is my biggest expense?"
 
     finally:
         app.dependency_overrides.pop(
@@ -134,16 +113,12 @@ def test_chat_with_ai_without_token(
 ):
     mock_service = Mock()
 
-    app.dependency_overrides[
-        get_chat_service
-    ] = lambda: mock_service
+    app.dependency_overrides[get_chat_service] = lambda: mock_service
 
     try:
         response = client.post(
             "/ai/chat",
-            json={
-                "message": "What is my biggest expense?"
-            },
+            json={"message": "What is my biggest expense?"},
         )
 
         assert response.status_code == 401
@@ -163,20 +138,14 @@ def test_chat_with_ai_empty_message(
 ):
     mock_service = Mock()
 
-    mock_service.chat.return_value = (
-        "Please provide a question."
-    )
+    mock_service.chat.return_value = "Please provide a question."
 
-    app.dependency_overrides[
-        get_chat_service
-    ] = lambda: mock_service
+    app.dependency_overrides[get_chat_service] = lambda: mock_service
 
     try:
         response = client.post(
             "/ai/chat",
-            json={
-                "message": ""
-            },
+            json={"message": ""},
             headers=authenticated_headers,
         )
 
@@ -184,15 +153,11 @@ def test_chat_with_ai_empty_message(
 
         body = response.json()
 
-        assert body["response"] == (
-            "Please provide a question."
-        )
+        assert body["response"] == ("Please provide a question.")
 
         mock_service.chat.assert_called_once()
 
-        call_kwargs = (
-            mock_service.chat.call_args.kwargs
-        )
+        call_kwargs = mock_service.chat.call_args.kwargs
 
         assert call_kwargs["message"] == ""
 

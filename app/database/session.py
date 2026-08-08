@@ -10,7 +10,6 @@ class Base(DeclarativeBase):
     """
     Base class for all SQLAlchemy ORM models.
     """
-    pass
 
 
 engine = create_engine(

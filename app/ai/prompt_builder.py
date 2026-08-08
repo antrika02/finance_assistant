@@ -1,5 +1,4 @@
 class PromptBuilder:
-
     @staticmethod
     def build_insight_prompt(
         summary: dict,
@@ -32,10 +31,7 @@ Budget Status:
         prompt += "\n\nTop Spending Categories:\n"
 
         for category in top_categories:
-            prompt += (
-                f"- {category.category}: "
-                f"{category.amount}\n"
-            )
+            prompt += f"- {category.category}: {category.amount}\n"
 
         prompt += """
 
@@ -86,9 +82,7 @@ BUDGET STATUS
         prompt += "\n\nTOP SPENDING CATEGORIES\n"
 
         for category in top_categories:
-            prompt += (
-                f"- {category.category}: ₹{category.amount}\n"
-            )
+            prompt += f"- {category.category}: ₹{category.amount}\n"
 
         prompt += f"""
 

@@ -1,22 +1,17 @@
-from typing import Generic, TypeVar
-
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-ModelType = TypeVar("ModelType")
 
-
-class BaseRepository(Generic[ModelType]):
-
+class BaseRepository[T]:
     def __init__(
         self,
         db: Session,
-        model: type[ModelType],
+        model: type[T],
     ):
         self.db = db
         self.model = model
 
-    def create(self, **data) -> ModelType:
+    def create(self, **data) -> T:
         obj = self.model(**data)
 
         self.db.add(obj)
@@ -28,21 +23,20 @@ class BaseRepository(Generic[ModelType]):
     def get_by_id(
         self,
         obj_id: int,
-    ) -> ModelType | None:
-        statement = select(self.model).where(
-            self.model.id == obj_id
-        )
+    ) -> T | None:
+        statement = select(self.model).where(self.model.id == obj_id)
 
         return self.db.scalar(statement)
 
-    def get_all(self) -> list[ModelType]:
+    def get_all(self) -> list[T]:
         statement = select(self.model)
+
         return list(self.db.scalars(statement).all())
 
     def update(
         self,
-        obj: ModelType,
-    ) -> ModelType:
+        obj: T,
+    ) -> T:
         self.db.commit()
         self.db.refresh(obj)
 
@@ -50,7 +44,7 @@ class BaseRepository(Generic[ModelType]):
 
     def delete(
         self,
-        obj: ModelType,
+        obj: T,
     ) -> None:
         self.db.delete(obj)
         self.db.commit()

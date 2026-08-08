@@ -7,7 +7,6 @@ from app.schemas.dashboard import (
 
 
 class DashboardService:
-
     def __init__(
         self,
         repository: DashboardRepository,

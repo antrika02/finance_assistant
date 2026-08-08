@@ -1,9 +1,10 @@
-from pathlib import Path
 import sys
 from logging.config import fileConfig
+from pathlib import Path
+
+from sqlalchemy import create_engine, pool
 
 from alembic import context
-from sqlalchemy import create_engine, pool
 
 # ---------------------------------------------------------------------
 # Make the project root importable
@@ -15,7 +16,6 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 # ---------------------------------------------------------------------
 from app.core.settings import get_settings
 from app.database.session import Base
-import app.models  # Registers all ORM models
 
 # ---------------------------------------------------------------------
 # Alembic Configuration

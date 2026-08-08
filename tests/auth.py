@@ -6,33 +6,21 @@ from tests.factories import (
 
 
 def register_user(
-
     client,
-
     full_name="John Doe",
-
     email=None,
-
     password="Password123!",
-
 ):
 
     payload = user_payload(
-
         full_name=full_name,
-
         email=email,
-
         password=password,
-
     )
 
     response = client.post(
-
         "/auth/register",
-
         json=payload,
-
     )
 
     assert response.status_code == 201
@@ -72,9 +60,7 @@ def auth_headers(
 
     token = login_user(client, payload)
 
-    return {
-        "Authorization": f"Bearer {token}"
-    }
+    return {"Authorization": f"Bearer {token}"}
 
 
 def create_category(client, headers, **kwargs):

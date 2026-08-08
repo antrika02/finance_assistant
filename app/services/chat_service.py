@@ -1,11 +1,10 @@
 from app.ai.client import GeminiClient
 from app.ai.prompt_builder import PromptBuilder
-from app.services.dashboard_service import DashboardService
 from app.services.budget_service import BudgetService
+from app.services.dashboard_service import DashboardService
 
 
 class ChatService:
-
     def __init__(
         self,
         dashboard_service: DashboardService,
@@ -22,19 +21,11 @@ class ChatService:
         message: str,
     ) -> str:
 
-        summary = self.dashboard_service.get_summary(
-            user_id
-        )
+        summary = self.dashboard_service.get_summary(user_id)
 
-        budgets = self.budget_service.get_budget_status(
-            user_id
-        )
+        budgets = self.budget_service.get_budget_status(user_id)
 
-        top_categories = (
-            self.dashboard_service.get_top_spending_categories(
-                user_id
-            )
-        )
+        top_categories = self.dashboard_service.get_top_spending_categories(user_id)
 
         prompt = PromptBuilder.build_chat_prompt(
             message=message,

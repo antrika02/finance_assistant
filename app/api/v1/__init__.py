@@ -1,11 +1,9 @@
-from . import (
-    auth,
-    budgets,
-    categories,
-    transactions,
-    users,
-    reports,
-    export,
-    pdf,
-    ai,
-)
+from . import ai as ai
+from . import auth as auth
+from . import budgets as budgets
+from . import categories as categories
+from . import export as export
+from . import pdf as pdf
+from . import reports as reports
+from . import transactions as transactions
+from . import users as users

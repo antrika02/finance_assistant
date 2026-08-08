@@ -8,7 +8,6 @@ from app.schemas.category import CategoryCreate, CategoryUpdate
 
 
 class CategoryService:
-
     def __init__(self, repository: CategoryRepository):
         self.repository = repository
 

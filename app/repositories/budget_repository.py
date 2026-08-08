@@ -7,7 +7,6 @@ from app.repositories.base_repository import BaseRepository
 
 
 class BudgetRepository(BaseRepository[Budget]):
-
     def __init__(self, db: Session):
         super().__init__(db, Budget)
 

@@ -2,25 +2,24 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.dependencies.database import get_db
-
-from app.repositories.user_repository import UserRepository
-from app.repositories.category_repository import CategoryRepository
-from app.repositories.transaction_repository import TransactionRepository
-from app.repositories.dashboard_repository import DashboardRepository
 from app.repositories.budget_repository import BudgetRepository
+from app.repositories.category_repository import CategoryRepository
+from app.repositories.dashboard_repository import DashboardRepository
 from app.repositories.report_repository import ReportRepository
-
-from app.services.user_service import UserService
+from app.repositories.transaction_repository import TransactionRepository
+from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
-from app.services.category_service import CategoryService
-from app.services.transaction_service import TransactionService
-from app.services.dashboard_service import DashboardService
 from app.services.budget_service import BudgetService
-from app.services.report_service import ReportService
-from app.services.export_service import ExportService
-from app.services.pdf_service import PDFService
-from app.services.insight_service import InsightService
+from app.services.category_service import CategoryService
 from app.services.chat_service import ChatService
+from app.services.dashboard_service import DashboardService
+from app.services.export_service import ExportService
+from app.services.insight_service import InsightService
+from app.services.pdf_service import PDFService
+from app.services.report_service import ReportService
+from app.services.transaction_service import TransactionService
+from app.services.user_service import UserService
+
 
 def get_user_service(
     db: Session = Depends(get_db),
@@ -86,12 +85,14 @@ def get_budget_service(
         CategoryRepository(db),
     )
 
+
 def get_report_service(
     db: Session = Depends(get_db),
 ) -> ReportService:
     return ReportService(
         ReportRepository(db),
     )
+
 
 def get_export_service(
     db: Session = Depends(get_db),
@@ -101,6 +102,7 @@ def get_export_service(
         TransactionRepository(db),
     )
 
+
 def get_pdf_service(
     db: Session = Depends(get_db),
 ) -> PDFService:
@@ -109,6 +111,7 @@ def get_pdf_service(
         DashboardRepository(db),
         TransactionRepository(db),
     )
+
 
 def get_insight_service(
     db: Session = Depends(get_db),
@@ -127,6 +130,7 @@ def get_insight_service(
         dashboard_service,
         budget_service,
     )
+
 
 def get_chat_service(
     db: Session = Depends(get_db),

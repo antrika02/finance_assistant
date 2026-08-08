@@ -6,7 +6,6 @@ from app.models import Transaction
 
 
 class ReportRepository:
-
     def __init__(
         self,
         db: Session,
@@ -47,9 +46,7 @@ class ReportRepository:
             )
         ).label("expense")
 
-        balance = (
-            income - expense
-        ).label("balance")
+        balance = (income - expense).label("balance")
 
         statement = (
             select(

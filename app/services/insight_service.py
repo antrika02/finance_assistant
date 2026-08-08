@@ -5,7 +5,6 @@ from app.services.dashboard_service import DashboardService
 
 
 class InsightService:
-
     def __init__(
         self,
         dashboard_service: DashboardService,
@@ -24,9 +23,7 @@ class InsightService:
 
         budgets = self.budget_service.get_budget_status(user_id)
 
-        categories = self.dashboard_service.get_top_spending_categories(
-            user_id
-        )
+        categories = self.dashboard_service.get_top_spending_categories(user_id)
 
         prompt = PromptBuilder.build_insight_prompt(
             summary,

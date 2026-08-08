@@ -3,7 +3,6 @@ from app.schemas import MonthlyReportResponse
 
 
 class ReportService:
-
     def __init__(
         self,
         repository: ReportRepository,
@@ -20,16 +19,13 @@ class ReportService:
         reports = []
 
         for row in result:
-
             year = int(row.year)
             month_number = int(row.month_number)
 
             month = f"{year:04d}-{month_number:02d}"
 
             savings_rate = (
-                float((row.balance / row.income) * 100)
-                if row.income
-                else 0.0
+                float((row.balance / row.income) * 100) if row.income else 0.0
             )
 
             reports.append(

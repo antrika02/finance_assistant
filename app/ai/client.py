@@ -4,7 +4,6 @@ from app.core.settings import get_settings
 
 
 class GeminiClient:
-
     def __init__(self):
         self.settings = get_settings()
 
