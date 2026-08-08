@@ -17,10 +17,15 @@ class ReportRepository:
         self,
         user_id: int,
     ):
-        month = func.to_char(
+        year = func.extract(
+            "year",
             Transaction.transaction_date,
-            "YYYY-MM",
-        ).label("month")
+        ).label("year")
+
+        month_number = func.extract(
+            "month",
+            Transaction.transaction_date,
+        ).label("month_number")
 
         income = func.sum(
             case(
@@ -48,7 +53,8 @@ class ReportRepository:
 
         statement = (
             select(
-                month,
+                year,
+                month_number,
                 income,
                 expense,
                 balance,
@@ -56,8 +62,14 @@ class ReportRepository:
             .where(
                 Transaction.user_id == user_id,
             )
-            .group_by(month)
-            .order_by(month)
+            .group_by(
+                year,
+                month_number,
+            )
+            .order_by(
+                year,
+                month_number,
+            )
         )
 
         return self.db.execute(statement).all()

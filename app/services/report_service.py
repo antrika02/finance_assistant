@@ -21,6 +21,11 @@ class ReportService:
 
         for row in result:
 
+            year = int(row.year)
+            month_number = int(row.month_number)
+
+            month = f"{year:04d}-{month_number:02d}"
+
             savings_rate = (
                 float((row.balance / row.income) * 100)
                 if row.income
@@ -29,7 +34,7 @@ class ReportService:
 
             reports.append(
                 MonthlyReportResponse(
-                    month=row.month,
+                    month=month,
                     income=row.income,
                     expense=row.expense,
                     balance=row.balance,
