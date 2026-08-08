@@ -36,7 +36,7 @@ class DashboardService:
 
         return [
             MonthlySummaryResponse(
-                month=row.month,
+                month=f"{int(row.year):04d}-{int(row.month):02d}",
                 income=row.income,
                 expense=row.expense,
                 balance=row.balance,

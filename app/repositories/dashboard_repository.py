@@ -78,9 +78,14 @@ class DashboardRepository:
         self,
         user_id: int,
     ):
-        month = func.to_char(
+        year = func.extract(
+            "year",
             Transaction.transaction_date,
-            "YYYY-MM",
+        ).label("year")
+
+        month = func.extract(
+            "month",
+            Transaction.transaction_date,
         ).label("month")
 
         income = func.sum(
@@ -109,6 +114,7 @@ class DashboardRepository:
 
         statement = (
             select(
+                year,
                 month,
                 income,
                 expense,
@@ -117,8 +123,14 @@ class DashboardRepository:
             .where(
                 Transaction.user_id == user_id,
             )
-            .group_by(month)
-            .order_by(month)
+            .group_by(
+                year,
+                month,
+            )
+            .order_by(
+                year,
+                month,
+            )
         )
 
         result = self.db.execute(statement)
