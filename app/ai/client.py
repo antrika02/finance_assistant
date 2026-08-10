@@ -23,6 +23,9 @@ class GeminiClient:
                 contents=prompt,
             )
 
+            if not response.text or not response.text.strip():
+                raise AIServiceException()
+
             return response.text
 
         except errors.APIError as exc:

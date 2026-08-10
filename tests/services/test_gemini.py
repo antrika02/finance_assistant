@@ -67,3 +67,61 @@ def test_gemini_client_handles_api_error():
             assert exc.status_code == 503
             assert exc.message == "AI service is temporarily unavailable."
             assert exc.__cause__ is api_error
+
+
+def test_gemini_client_handles_empty_response():
+    mock_settings = MagicMock()
+    mock_settings.GEMINI_API_KEY = "fake-api-key"
+    mock_settings.GEMINI_MODEL = "fake-model"
+
+    mock_genai_client = MagicMock()
+
+    mock_response = MagicMock()
+    mock_response.text = ""
+
+    mock_genai_client.models.generate_content.return_value = mock_response
+
+    with patch(
+        "app.ai.client.get_settings",
+        return_value=mock_settings,
+    ), patch(
+        "app.ai.client.genai.Client",
+        return_value=mock_genai_client,
+    ):
+        client = GeminiClient()
+
+        try:
+            client.generate("Say hello in one sentence.")
+            raise AssertionError("Expected AIServiceException")
+        except AIServiceException as exc:
+            assert exc.status_code == 503
+            assert exc.message == "AI service is temporarily unavailable."
+
+
+def test_gemini_client_handles_whitespace_response():
+    mock_settings = MagicMock()
+    mock_settings.GEMINI_API_KEY = "fake-api-key"
+    mock_settings.GEMINI_MODEL = "fake-model"
+
+    mock_genai_client = MagicMock()
+
+    mock_response = MagicMock()
+    mock_response.text = "   "
+
+    mock_genai_client.models.generate_content.return_value = mock_response
+
+    with patch(
+        "app.ai.client.get_settings",
+        return_value=mock_settings,
+    ), patch(
+        "app.ai.client.genai.Client",
+        return_value=mock_genai_client,
+    ):
+        client = GeminiClient()
+
+        try:
+            client.generate("Say hello in one sentence.")
+            raise AssertionError("Expected AIServiceException")
+        except AIServiceException as exc:
+            assert exc.status_code == 503
+            assert exc.message == "AI service is temporarily unavailable."
