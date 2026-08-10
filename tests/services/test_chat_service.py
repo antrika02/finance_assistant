@@ -1,9 +1,9 @@
 from unittest.mock import MagicMock
 
-from app.ai.insight_service import InsightService
+from app.services.chat_service import ChatService
 
 
-def test_generate_insights():
+def test_chat():
     dashboard_service = MagicMock()
     budget_service = MagicMock()
     gemini_client = MagicMock()
@@ -12,6 +12,7 @@ def test_generate_insights():
         "total_income": 50000,
         "total_expense": 20000,
         "current_balance": 30000,
+        "total_transactions": 10,
     }
 
     budget_service.get_budget_status.return_value = []
@@ -19,19 +20,21 @@ def test_generate_insights():
     dashboard_service.get_top_spending_categories.return_value = []
 
     gemini_client.generate.return_value = (
-        "Your finances look healthy. "
-        "You should continue monitoring your expenses."
+        "You are spending within your current budget."
     )
 
-    service = InsightService(
+    service = ChatService(
         dashboard_service=dashboard_service,
         budget_service=budget_service,
         client=gemini_client,
     )
 
-    result = service.generate_insights(user_id=1)
+    result = service.chat(
+        user_id=1,
+        message="How am I doing financially?",
+    )
 
-    assert "finances look healthy" in result
+    assert result == "You are spending within your current budget."
 
     dashboard_service.get_summary.assert_called_once_with(1)
 

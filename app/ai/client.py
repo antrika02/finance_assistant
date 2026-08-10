@@ -1,6 +1,8 @@
 from google import genai
+from google.genai import errors
 
 from app.core.settings import get_settings
+from app.exceptions.ai import AIServiceException
 
 
 class GeminiClient:
@@ -15,10 +17,13 @@ class GeminiClient:
         self,
         prompt: str,
     ) -> str:
+        try:
+            response = self.client.models.generate_content(
+                model=self.settings.GEMINI_MODEL,
+                contents=prompt,
+            )
 
-        response = self.client.models.generate_content(
-            model=self.settings.GEMINI_MODEL,
-            contents=prompt,
-        )
+            return response.text
 
-        return response.text
+        except errors.APIError as exc:
+            raise AIServiceException() from exc

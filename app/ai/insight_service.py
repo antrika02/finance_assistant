@@ -9,10 +9,11 @@ class InsightService:
         self,
         dashboard_service: DashboardService,
         budget_service: BudgetService,
+        client: GeminiClient | None = None,
     ):
         self.dashboard_service = dashboard_service
         self.budget_service = budget_service
-        self.client = GeminiClient()
+        self.client = client or GeminiClient()
 
     def generate_insights(
         self,

@@ -4,6 +4,7 @@ from app.dependencies.services import (
     get_chat_service,
     get_insight_service,
 )
+from app.exceptions.ai import AIServiceException
 from app.main import app
 
 
@@ -160,6 +161,69 @@ def test_chat_with_ai_empty_message(
         call_kwargs = mock_service.chat.call_args.kwargs
 
         assert call_kwargs["message"] == ""
+
+    finally:
+        app.dependency_overrides.pop(
+            get_chat_service,
+            None,
+        )
+
+
+def test_get_ai_insights_when_ai_service_unavailable(
+    client,
+    authenticated_headers,
+):
+    mock_service = Mock()
+
+    mock_service.generate_insights.side_effect = AIServiceException()
+
+    app.dependency_overrides[get_insight_service] = lambda: mock_service
+
+    try:
+        response = client.get(
+            "/ai/insights",
+            headers=authenticated_headers,
+        )
+
+        assert response.status_code == 503
+
+        body = response.json()
+
+        assert body["detail"] == "AI service is temporarily unavailable."
+
+        mock_service.generate_insights.assert_called_once()
+
+    finally:
+        app.dependency_overrides.pop(
+            get_insight_service,
+            None,
+        )
+
+
+def test_chat_with_ai_when_ai_service_unavailable(
+    client,
+    authenticated_headers,
+):
+    mock_service = Mock()
+
+    mock_service.chat.side_effect = AIServiceException()
+
+    app.dependency_overrides[get_chat_service] = lambda: mock_service
+
+    try:
+        response = client.post(
+            "/ai/chat",
+            json={"message": "How am I doing financially?"},
+            headers=authenticated_headers,
+        )
+
+        assert response.status_code == 503
+
+        body = response.json()
+
+        assert body["detail"] == "AI service is temporarily unavailable."
+
+        mock_service.chat.assert_called_once()
 
     finally:
         app.dependency_overrides.pop(
