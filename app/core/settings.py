@@ -69,7 +69,23 @@ class Settings(BaseSettings):
         otherwise constructs a local PostgreSQL URL.
         """
         if self.DATABASE_URL_OVERRIDE:
-            return self.DATABASE_URL_OVERRIDE
+            url = self.DATABASE_URL_OVERRIDE
+
+            if url.startswith("postgresql://"):
+                url = url.replace(
+                    "postgresql://",
+                    "postgresql+psycopg://",
+                    1,
+                )
+
+            elif url.startswith("postgres://"):
+                url = url.replace(
+                    "postgres://",
+                    "postgresql+psycopg://",
+                    1,
+                )
+
+            return url
 
         return (
             f"postgresql+psycopg://"
