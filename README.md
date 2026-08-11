@@ -1,166 +1,110 @@
 # 💰 FinPilot AI — Intelligent Personal Finance Management Backend
 
 <p align="center">
-  <img src="images/banner.png" width="100%" alt="FinPilot AI Banner">
+  <img src="docs/banner.png" width="100%" alt="FinPilot AI Banner">
 </p>
 
 <p align="center">
-  AI-Powered Personal Finance Management Backend built with <b>FastAPI</b>, <b>PostgreSQL</b>, <b>SQLAlchemy</b>, <b>JWT Authentication</b>, <b>Gemini AI</b>, and <b>ReportLab</b>.
+  <b>An AI-powered personal finance backend built with FastAPI, PostgreSQL, SQLAlchemy, JWT authentication, and Google Gemini.</b>
   <br>
-  Built using production-inspired backend architecture and clean software engineering principles.
+  Designed as a production-inspired backend system with layered architecture, ownership-aware authorization, automated testing, Docker containerization, database migrations, and live cloud deployment.
 </p>
 
 <p align="center">
+  <a href="https://finance-assistant-1tks.onrender.com"><img src="https://img.shields.io/badge/Live%20API-Render-purple?style=for-the-badge" alt="Live API"></a>
+  <a href="https://finance-assistant-1tks.onrender.com/docs"><img src="https://img.shields.io/badge/API%20Docs-Swagger-success?style=for-the-badge" alt="Swagger"></a>
   <img src="https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/FastAPI-0.140-green?style=for-the-badge&logo=fastapi" alt="FastAPI">
-  <img src="https://img.shields.io/badge/PostgreSQL-16-blue?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
-  <img src="https://img.shields.io/badge/SQLAlchemy-ORM-red?style=for-the-badge" alt="SQLAlchemy">
-  <img src="https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge" alt="JWT">
-  <img src="https://img.shields.io/badge/Google-Gemini_AI-purple?style=for-the-badge" alt="Gemini">
-  <img src="https://img.shields.io/badge/PDF-ReportLab-darkgreen?style=for-the-badge" alt="ReportLab">
-  <img src="https://img.shields.io/badge/API-Swagger-success?style=for-the-badge" alt="Swagger">
+  <img src="https://img.shields.io/badge/FastAPI-blue?style=for-the-badge&logo=fastapi" alt="FastAPI">
+  <img src="https://img.shields.io/badge/PostgreSQL-blue?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/SQLAlchemy-red?style=for-the-badge" alt="SQLAlchemy">
+  <img src="https://img.shields.io/badge/JWT-orange?style=for-the-badge" alt="JWT">
+  <img src="https://img.shields.io/badge/Google%20Gemini-purple?style=for-the-badge" alt="Gemini">
 </p>
 
 ---
 
 ## 📑 Table of Contents
 
-1. [Project Statistics](#-project-statistics)
-2. [Project Overview](#-project-overview)
+1. [Project at a Glance](#-project-at-a-glance)
+2. [Design Principles](#️-design-principles)
 3. [Key Features](#-key-features)
-4. [Design Principles](#️-design-principles)
-5. [System Architecture](#-system-architecture)
+4. [System Architecture](#-system-architecture)
    - [High-Level Architecture](#high-level-architecture)
    - [Backend Architecture](#backend-architecture)
    - [Database Schema](#database-schema)
    - [AI Architecture](#ai-architecture)
    - [Request Lifecycle](#request-lifecycle)
-6. [User Flow](#-user-flow)
-7. [Project Structure](#-project-structure)
-8. [Technology Stack](#️-technology-stack)
-9. [Getting Started](#-getting-started)
-   - [Prerequisites](#-prerequisites)
-   - [Installation](#-install-dependencies)
-   - [Environment Variables](#-configure-environment-variables)
-   - [Database Setup](#️-database-setup)
-   - [Running the Server](#️-start-the-development-server)
-10. [API Documentation](#-api-documentation)
-11. [API Reference](#-api-reference)
-    - [Authentication APIs](#-authentication-apis)
-    - [Category APIs](#-category-apis)
-    - [Transaction APIs](#-transaction-apis)
-    - [Dashboard APIs](#-dashboard-apis)
-    - [Budget APIs](#-budget-apis)
-    - [Report & PDF APIs](#-report-apis)
-    - [AI APIs](#-ai-apis)
-12. [Business Rules](#-business-rules)
-13. [Security](#-security)
-14. [Error Handling](#️-error-handling)
-15. [Testing](#-testing)
-16. [Deployment](#️-deployment)
-17. [Roadmap](#-roadmap)
-18. [FAQ](#-frequently-asked-questions)
-19. [Contributing](#-contributing)
-20. [Author](#-author)
-21. [License](#-license)
+5. [User Flow](#-user-flow)
+6. [Project Structure](#-project-structure)
+7. [Technology Stack](#️-technology-stack)
+8. [Getting Started](#-getting-started)
+9. [API Documentation](#-api-documentation)
+10. [API Reference](#-api-reference)
+11. [Business Rules](#-business-rules)
+12. [Security](#-security)
+13. [Error Handling](#️-error-handling)
+14. [Testing](#-testing)
+15. [Deployment](#️-deployment)
+16. [Roadmap](#-roadmap)
+17. [FAQ](#-frequently-asked-questions)
+18. [Contributing](#-contributing)
+19. [Author](#-author)
+20. [License](#-license)
 
 ---
 
-## 📊 Project Statistics
+## 📌 Project at a Glance
 
-| Category | Highlight |
-|-----------|-----------|
-| 🐍 Language | Python 3.12 |
-| ⚡ Framework | FastAPI |
-| 🗄️ Database | PostgreSQL 16 |
-| 🧩 ORM | SQLAlchemy |
-| 🔐 Authentication | JWT (Stateless) |
-| 🤖 AI Engine | Google Gemini |
-| 📄 Report Engine | ReportLab (PDF) |
-| 📚 API Documentation | Swagger UI & ReDoc |
-| 🏗️ Architecture | Repository-Service Pattern |
-| 📦 Package Manager | uv |
-| 🔗 REST Endpoints | 29 |
-| 🧱 Architecture Layers | 7 (API, Service, Repository, Model, Schema, AI, Database) |
-| 🧭 Feature Modules | 7 (Auth, Categories, Transactions, Budgets, Dashboard, Reports, AI) |
+FinPilot AI is a backend-first personal finance platform that lets authenticated users track transactions, manage categories and budgets, generate financial reports, and receive AI-powered financial insights — all through a secured, ownership-aware RESTful API.
 
----
+| Capability | Status |
+|---|---|
+| REST API | ✅ Live |
+| PostgreSQL | ✅ Connected |
+| JWT Authentication | ✅ Implemented |
+| Transactions, Categories & Budgets | ✅ Implemented |
+| Dashboard Analytics | ✅ Implemented |
+| Reports, PDF & CSV Export | ✅ Implemented |
+| Gemini AI Insights & Chat | ✅ Implemented |
+| Database Migrations (Alembic) | ✅ Implemented |
+| Automated Tests | ✅ 72 passing |
+| Code Quality (Ruff) | ✅ Configured |
+| Docker & Docker Compose | ✅ Implemented |
+| Cloud Deployment (Render) | ✅ Live |
 
-## 📖 Project Overview
+### 🌐 Live Demo
 
-FinPilot AI is an AI-powered backendthat helps users manage their personal finances through secure authentication, intelligent budgeting, expense tracking, financial reporting, AI-generated insights, and conversational financial assistance.
+| Resource | Link |
+|----------|------|
+| 🚀 Production API | [finance-assistant-1tks.onrender.com](https://finance-assistant-1tks.onrender.com) |
+| 📚 Swagger UI | [finance-assistant-1tks.onrender.com/docs](https://finance-assistant-1tks.onrender.com/docs) |
+| ❤️ Health Check | [finance-assistant-1tks.onrender.com/health](https://finance-assistant-1tks.onrender.com/health) |
 
-Unlike a traditional CRUD-based finance application, FinPilot AI combines modern backend engineering practices with Generative AI to provide actionable financial recommendations and natural language financial conversations.
-
-The project follows a scalable layered architecture using the Repository-Service Pattern, dependency injection, modular routing, and clean separation of concerns. It is designed as a portfolio-grade backend project demonstrating modern software engineering principles.
-
----
-
-## 🚀 Key Features
-
-### 🔐 Authentication
-- JWT Authentication
-- Secure Login
-- User Registration
-- Password Hashing
-- Protected Endpoints
-- Ownership Validation
-
-### 💰 Finance Management
-- Expense Tracking
-- Income Tracking
-- Categories
-- Monthly Budgets
-- Budget Alerts
-- Financial Reports
-- Recent Transactions
-- Monthly Summary
-
-### 🤖 Artificial Intelligence
-- AI Financial Insights
-- AI Financial Chat Assistant
-- Personalized Recommendations
-- Spending Analysis
-- Financial Health Summary
-- Gemini AI Integration
-- Prompt Engineering
-
-### 📄 Reports
-- Monthly Reports
-- PDF Export
-- Downloadable Financial Summary
-
-### 📊 Dashboard
-- Income vs Expense
-- Current Balance
-- Budget Utilization
-- Category Breakdown
-- Top Spending Categories
-- Recent Transactions
+There's no frontend yet — click **Swagger UI** above to explore and test every endpoint directly.
 
 ---
 
 ## 🏛️ Design Principles
 
-FinPilot AI is designed around clean architecture principles that separate concerns across multiple layers.
+FinPilot AI follows clean architecture: a repository pattern for database abstraction, a service layer for business logic, dependency injection for loose coupling, Pydantic schemas for request/response validation, SQLAlchemy ORM for persistence, centralized exception handling, JWT-based authorization, modular API routing, and an AI layer fully isolated from business logic. This keeps each component focused on a single responsibility and improves maintainability, scalability, and testability.
 
-- Repository pattern for database abstraction
-- Service layer for business logic
-- Dependency Injection for loose coupling
-- Pydantic schemas for request and response validation
-- SQLAlchemy ORM for persistence
-- Centralized exception handling
-- JWT-based authentication and authorization
-- Modular API routing
-- AI services isolated from business logic
+---
 
-This architecture improves maintainability, scalability, and testability while keeping each component focused on a single responsibility.
+## 🚀 Key Features
+
+**🔐 Authentication** — JWT-based auth, secure registration & login, password hashing, protected endpoints, ownership validation.
+
+**💰 Finance Management** — Income & expense tracking, custom categories, monthly budgets with alerts, financial reports, monthly summaries.
+
+**🤖 Artificial Intelligence** — AI-generated financial insights, conversational chat assistant, personalized recommendations, and spending analysis powered by Google Gemini.
+
+**📄 Reports & Dashboard** — Monthly reports, downloadable PDF and CSV exports, income vs. expense breakdown, budget utilization, and top spending categories.
 
 ---
 
 ## 🏗️ System Architecture
 
-FinPilot AI follows a layered architecture that separates responsibilities into independent modules, making the codebase scalable, maintainable, and easy to test.
+FinPilot AI follows a layered architecture that separates responsibilities across independent modules following the Repository-Service Pattern.
 
 | Layer | Responsibility |
 |-------|-----------------|
@@ -171,8 +115,6 @@ FinPilot AI follows a layered architecture that separates responsibilities into 
 | Schema Layer | Validates request and response data |
 | AI Layer | Integrates with Google Gemini |
 | Database Layer | Stores persistent financial data |
-
-This design follows the Repository-Service Pattern, allowing business logic to remain independent from the database implementation.
 
 ### High-Level Architecture
 
@@ -197,7 +139,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    C[Client] --> AM[Authentication Middleware]
+    C[Client] --> AM[Authentication / Authorization]
     AM --> AR[API Router]
     AR --> DI[Dependency Injection]
     DI --> BS[Business Services]
@@ -207,7 +149,7 @@ flowchart TD
 
 ### Database Schema
 
-The application uses PostgreSQL with normalized relational tables. Main entities are Users, Categories, Transactions, and Budgets, with relationships enforced using foreign keys.
+PostgreSQL with normalized relational tables. Main entities are Users, Categories, Transactions, and Budgets, with relationships enforced via foreign keys.
 
 ```mermaid
 erDiagram
@@ -247,7 +189,7 @@ erDiagram
 
 ### AI Architecture
 
-The AI module is completely isolated from the rest of the application. Instead of allowing API routes to communicate directly with Gemini, every AI request flows through a dedicated service layer.
+The AI module is fully isolated from the rest of the application — every AI request flows through a dedicated service layer rather than talking to Gemini directly, making it easy to swap LLMs or add RAG later.
 
 ```mermaid
 flowchart TD
@@ -264,48 +206,9 @@ flowchart TD
     TC --> PB
 ```
 
-This design makes it easy to replace Gemini with another LLM, modify prompts independently, test AI functionality, and add Retrieval-Augmented Generation (RAG) later.
-
-| Component | Responsibility |
-|------------|----------------|
-| GeminiClient | Connects to Gemini API |
-| PromptBuilder | Builds prompts dynamically |
-| InsightService | Generates financial insights |
-| ChatService | Handles conversational AI |
-
-**Prompt Engineering** — the application dynamically constructs prompts using real financial data before sending them to Gemini. Each prompt includes the financial summary, budget status, category breakdown, and the user's question, producing personalized and context-aware responses.
-
-#### Example AI Insight
-
-```text
-Overall Summary
-You spent ₹42,000 this month while earning ₹78,000.
-Your savings rate is healthy and you currently have a positive cash flow.
-
-Top Insights
-• Food expenses increased significantly.
-• Shopping exceeded the allocated budget.
-• Transportation spending remained stable.
-
-Recommendations
-• Reduce discretionary shopping.
-• Increase savings allocation.
-• Consider increasing your food budget if spending remains consistent.
-```
-
-#### Example AI Chat
-
-```text
-User: Where am I spending the most money?
-
-AI: Your highest spending category is Shopping, followed by Food and
-Transportation. Reducing Shopping expenses by even 15% would
-significantly improve your monthly savings.
-```
+> **Illustrative example** (actual wording varies per user and per Gemini response): *"Where am I spending the most?"* → *"Your highest spending category is Shopping, followed by Food and Transportation. Reducing Shopping spend could meaningfully improve your monthly savings."*
 
 ### Request Lifecycle
-
-Every request follows the same processing pipeline.
 
 ```mermaid
 sequenceDiagram
@@ -333,8 +236,6 @@ sequenceDiagram
 
 ## 🧭 User Flow
 
-The typical end-to-end journey a user takes through FinPilot AI, from account creation to AI-assisted financial insights.
-
 ```mermaid
 flowchart TD
     A[Register] --> B[Login]
@@ -355,24 +256,31 @@ flowchart TD
 ## 📂 Project Structure
 
 ```text
-FinPilot-AI
+finance_assistant
 │
 ├── app
-│   ├── ai
-│   ├── api
-│   ├── auth
-│   ├── core
-│   ├── dependencies
-│   ├── exceptions
-│   ├── models
-│   ├── repositories
-│   ├── schemas
-│   ├── services
+│   ├── ai              # Gemini client & prompt builder
+│   ├── api              # Routers (health, root, v1/*)
+│   ├── auth              # JWT + password hashing
+│   ├── core              # App factory, settings, logging
+│   ├── database          # SQLAlchemy session/base
+│   ├── dependencies      # DI providers, pagination, sorting
+│   ├── enums              # Category/transaction/budget enums
+│   ├── exceptions        # Domain exceptions
+│   ├── models             # SQLAlchemy models
+│   ├── repositories       # Data access layer
+│   ├── schemas             # Pydantic request/response models
+│   ├── services            # Business logic
 │   └── main.py
 │
-├── alembic
-├── tests
-├── images
+├── alembic                # Database migrations
+├── docker                 # docker-compose.yml
+├── docs                    # banner.png, swagger.png
+├── tests                   # pytest suite (API + service layer)
+├── Dockerfile
+├── alembic.ini
+├── pytest.ini
+├── runtime.txt
 ├── .env.example
 ├── pyproject.toml
 └── README.md
@@ -382,92 +290,55 @@ FinPilot-AI
 
 ## ⚙️ Technology Stack
 
-| Layer | Technology |
-|--------|------------|
+| Component | Technology |
+|-----------|------------|
 | Language | Python 3.12 |
 | Framework | FastAPI |
+| ASGI Server | Uvicorn |
 | ORM | SQLAlchemy |
 | Database | PostgreSQL |
-| Authentication | JWT |
-| Password Hashing | Passlib |
+| Migrations | Alembic |
 | Validation | Pydantic v2 |
-| AI | Google Gemini |
-| PDF | ReportLab |
-| API Docs | Swagger UI |
-| Dependency Manager | uv |
-| Server | Uvicorn |
-
-### Core Libraries
-
-| Library | Purpose |
-|----------|---------|
-| FastAPI | REST API Framework |
-| SQLAlchemy | ORM |
-| Pydantic | Data Validation |
-| Psycopg | PostgreSQL Driver |
-| python-jose | JWT Tokens |
-| Passlib | Password Hashing |
-| ReportLab | PDF Generation |
-| Google GenAI SDK | Gemini Integration |
-| Uvicorn | ASGI Server |
+| Authentication | JWT (python-jose) |
+| Password Hashing | pwdlib (Argon2) |
+| AI | Google Gemini (google-genai SDK) |
+| PDF Generation | ReportLab |
+| Logging | Loguru |
+| API Docs | Swagger UI / ReDoc |
+| Package Manager | uv |
+| Containerization | Docker & Docker Compose |
+| Testing | pytest (72 tests) |
+| Linting | Ruff |
 
 ---
 
 ## 🚀 Getting Started
 
-Follow the steps below to set up FinPilot AI on your local machine.
+### Prerequisites
 
-### 📋 Prerequisites
-
-| Software | Version |
+| Software | Notes |
 |-----------|---------|
 | Python | 3.12+ |
-| PostgreSQL | 16+ |
-| Git | Latest |
-| uv | Latest |
+| PostgreSQL | Required (or use Docker Compose below) |
+| uv | Package manager |
 | Google Gemini API Key | Required |
 
-### 📥 Clone the Repository
+### Clone & Install
 
 ```bash
-git clone [https://github.com/antrika02/finance_assistant]
-cd FinPilot-AI
-```
-
-### 📦 Install Dependencies
-
-This project uses **uv** as the package manager.
-
-```bash
+git clone https://github.com/antrika02/finance_assistant
+cd finance_assistant
 uv sync
 ```
 
-If you don't have uv installed:
-
-```bash
-pip install uv
-```
-
-Verify installation:
-
-```bash
-uv --version
-```
-
-### 🔑 Configure Environment Variables
-
-Create a new `.env` file:
+### Configure Environment
 
 ```bash
 cp .env.example .env
 ```
 
-Update the values according to your local environment:
-
 ```env
 APP_NAME=FinPilot AI
-APP_VERSION=1.0.0
-APP_ENV=development
 DEBUG=True
 HOST=127.0.0.1
 PORT=8000
@@ -483,248 +354,116 @@ DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 
 GEMINI_API_KEY=your_google_gemini_api_key
-GEMINI_MODEL=gemini-2.5-flash-lite
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
-| Variable | Description |
-|------------|-------------|
-| SECRET_KEY | JWT Secret Key |
-| DATABASE_HOST | PostgreSQL Host |
-| DATABASE_PORT | PostgreSQL Port |
-| DATABASE_NAME | Database Name |
-| DATABASE_USER | PostgreSQL Username |
-| DATABASE_PASSWORD | PostgreSQL Password |
-| GEMINI_API_KEY | Google Gemini API Key |
-| GEMINI_MODEL | Gemini Model Name |
-
-### 🛢️ Database Setup
-
-Create a PostgreSQL database:
-
-```sql
-CREATE DATABASE personal_finance;
-```
-
-Run database migrations:
+### Run Migrations & Start the Server
 
 ```bash
 alembic upgrade head
-```
-
-### ▶️ Start the Development Server
-
-```bash
 uv run uvicorn app.main:app --reload
 ```
 
-or
+Server runs at `http://127.0.0.1:8000`.
+
+### 🐳 Run with Docker (Alternative)
 
 ```bash
-python -m uvicorn app.main:app --reload
+docker compose -f docker/docker-compose.yml up --build
+docker compose -f docker/docker-compose.yml exec api uv run alembic upgrade head
 ```
 
-If everything is configured correctly, you should see:
-
-```text
-INFO: Uvicorn running on http://127.0.0.1:8000
-```
+This starts three containers: the FinPilot AI API (`http://localhost:8000`), PostgreSQL 17, and pgAdmin (`http://localhost:5050`) for inspecting the database.
 
 ---
 
 ## 🌐 API Documentation
 
-Once the server starts, FastAPI automatically generates interactive API documentation.
-
 | Docs | URL |
 |------|-----|
-| Swagger UI | `http://127.0.0.1:8000/docs` |
-| ReDoc | `http://127.0.0.1:8000/redoc` |
+| Live Swagger UI | [finance-assistant-1tks.onrender.com/docs](https://finance-assistant-1tks.onrender.com/docs) |
+| Local Swagger UI | `http://127.0.0.1:8000/docs` |
+| Local ReDoc | `http://127.0.0.1:8000/redoc` |
 
-From Swagger you can register a new user, login, copy the JWT token, authorize requests, test every endpoint, download responses, and validate schemas.
+From Swagger you can register, login, copy the JWT token, click **Authorize**, and test every endpoint interactively.
 
 <p align="center">
-  <img src="images/swagger.png" width="100%" alt="Swagger UI">
+  <img src="docs/swagger.png" width="100%" alt="Swagger UI">
 </p>
-
-### 🔑 Authentication Workflow
-
-1. Register a new user — `POST /auth/register`
-2. Login — `POST /auth/login`
-3. Copy the generated JWT access token
-4. Click the **Authorize** button inside Swagger and enter `Bearer YOUR_ACCESS_TOKEN`
-
-Now every protected endpoint becomes accessible.
 
 ---
 
 ## 📚 API Reference
 
-All APIs follow RESTful conventions and return JSON responses.
+All endpoints are RESTful and return JSON.
 
-| Base | URL |
-|------|-----|
-| Local Base URL | `http://127.0.0.1:8000` |
-| Swagger | `http://127.0.0.1:8000/docs` |
-| ReDoc | `http://127.0.0.1:8000/redoc` |
+### 🔐 Authentication
 
-### 🔐 Authentication APIs
+| Method | Endpoint | Protected |
+|---------|----------|-----------|
+| POST | `/auth/register` | ❌ |
+| POST | `/auth/login` | ❌ |
+| GET | `/auth/me` | ✅ |
 
-| Method | Endpoint | Description | Protected |
-|---------|----------|-------------|-----------|
-| POST | `/auth/register` | Register a new user | ❌ |
-| POST | `/auth/login` | Login and obtain JWT token | ❌ |
-| GET | `/auth/me` | Get authenticated user | ✅ |
+`/auth/login` uses the OAuth2 password flow (`application/x-www-form-urlencoded` with `username` + `password` fields) — this is what Swagger's **Authorize** button submits automatically.
 
-### 📂 Category APIs
+### 📂 Categories
 
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/categories/` | Create category |
-| GET | `/categories/` | List categories |
-| GET | `/categories/{id}` | Get category |
-| PUT | `/categories/{id}` | Update category |
-| DELETE | `/categories/{id}` | Delete category |
+| Method | Endpoint |
+|---------|----------|
+| POST / GET | `/categories/` |
+| GET / PUT / DELETE | `/categories/{id}` |
 
-### 💳 Transaction APIs
+### 💳 Transactions
 
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/transactions/` | Create transaction |
-| GET | `/transactions/` | List transactions |
-| GET | `/transactions/{id}` | Get transaction |
-| PUT | `/transactions/{id}` | Update transaction |
-| DELETE | `/transactions/{id}` | Delete transaction |
-| GET | `/transactions/summary` | Financial summary |
+| Method | Endpoint |
+|---------|----------|
+| POST / GET | `/transactions` |
+| GET / PUT / DELETE | `/transactions/{id}` |
+| GET | `/transactions/summary` |
 
-Supported filters:
+Supports filtering by `type`, `category_id`, `start_date`, `end_date`, `search`, and pagination/sorting via `page`, `size`, `sort`.
 
-| Parameter | Description |
-|------------|-------------|
-| type | income / expense |
-| category_id | Filter by category |
-| start_date | Filter start date |
-| end_date | Filter end date |
-| search | Search description |
-| page | Pagination |
-| size | Page size |
-| sort | Sort by amount/date |
-
-```
-GET /transactions?page=1&size=10&type=expense&sort=-amount
-```
-
-### 📊 Dashboard APIs
+### 📊 Dashboard
 
 | Method | Endpoint |
 |---------|----------|
 | GET | `/dashboard/summary` |
-| GET | `/dashboard/categories` |
+| GET | `/dashboard/category-breakdown` |
 | GET | `/dashboard/monthly-summary` |
 | GET | `/dashboard/recent-transactions` |
+| GET | `/dashboard/top-spending-categories` |
 
-Current balance is computed as `Income − Expense`.
-
-### 💰 Budget APIs
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/budgets/` |
-| GET | `/budgets/` |
-| GET | `/budgets/{id}` |
-| PUT | `/budgets/{id}` |
-| DELETE | `/budgets/{id}` |
-| GET | `/budgets/status` |
-| GET | `/budgets/alerts` |
-
-Budget health thresholds:
-
-| Status | Percentage Used |
-|--------|------------------|
-| Healthy | < 80% |
-| Warning | 80% – 99% |
-| Exceeded | ≥ 100% |
-
-### 📄 Report APIs
+### 💰 Budgets
 
 | Method | Endpoint |
 |---------|----------|
-| GET | `/reports/monthly` |
-| GET | `/export/pdf` |
+| POST / GET | `/budgets` |
+| PUT / DELETE | `/budgets/{id}` |
+| GET | `/budgets/status`, `/budgets/alerts` |
 
-### 🤖 AI APIs
+Health thresholds: **Healthy** < 80% · **Warning** 80–99% · **Exceeded** ≥ 100%.
+
+### 📄 Reports, Export & AI
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | `/ai/insights` | Generate AI financial insights |
+| GET | `/reports/monthly` | Monthly financial report |
+| GET | `/export/csv` | Downloadable CSV of transactions |
+| GET | `/pdf/report` | Downloadable PDF financial report |
+| GET | `/ai/insights` | AI-generated financial insights |
 | POST | `/ai/chat` | Conversational financial assistant |
 
-### 📨 Example Requests
+### Example
 
-**Register**
-```json
-POST /auth/register
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "Password123"
-}
-```
-
-**Login**
-```json
-POST /auth/login
-{
-  "email": "john@example.com",
-  "password": "Password123"
-}
-```
-
-**Create Category**
-```json
-POST /categories/
-{
-  "name": "Food",
-  "type": "expense",
-  "icon": "🍕",
-  "color": "#FF5733"
-}
-```
-
-**Create Transaction**
-```json
-POST /transactions/
-{
-  "amount": 1500,
-  "type": "expense",
-  "description": "Groceries",
-  "transaction_date": "2026-08-01",
-  "category_id": 1
-}
-```
-
-**Create Budget**
-```json
-POST /budgets/
-{
-  "category_id": 1,
-  "amount": 10000,
-  "month": 8,
-  "year": 2026
-}
-```
-
-**AI Chat**
 ```json
 POST /ai/chat
-{
-  "message": "How can I reduce my monthly expenses?"
-}
+{ "message": "How can I reduce my monthly expenses?" }
 ```
 
-**Example Response**
 ```json
 {
-  "response": "Your largest spending category is Shopping. Reducing Shopping expenses by 15% could significantly increase your monthly savings."
+  "response": "Your largest spending category is Shopping. Reducing it by 15% could significantly increase your monthly savings."
 }
 ```
 
@@ -732,197 +471,98 @@ POST /ai/chat
 
 ## ✅ Business Rules
 
-**Transactions**
-- Category must exist and belong to the authenticated user.
-- Transaction ownership is verified before update/delete.
-
-**Categories**
-- Categories are user-specific.
-- Users cannot modify another user's categories.
-
-**Budgets**
-- Only one budget is allowed per category for a given month.
-- Budget category must belong to the authenticated user.
-- Budget ownership is validated before modification.
-
-**Dashboard**
-- Dashboard statistics are computed only using the authenticated user's data.
-
-**Authentication**
-- Every protected endpoint requires a valid JWT token.
-- Unauthorized requests receive HTTP `401 Unauthorized`.
-- Users attempting to access another user's resources receive HTTP `403 Forbidden`.
+- Categories, transactions, and budgets are user-owned; cross-user access is blocked at the service layer.
+- Only one budget is allowed per category per month.
+- Dashboard statistics are computed only from the authenticated user's own data.
+- Every protected endpoint requires a valid JWT — unauthorized requests return `401`, cross-user access attempts return `403`.
 
 ---
 
 ## 🔒 Security
 
-**Authentication**
-- JWT Authentication
-- Protected Endpoints
-- Secure Password Hashing
-- Stateless Sessions
-
-**Authorization**
-- Every protected resource is ownership-aware — a user cannot access another user's transactions, budgets, or categories. Ownership validation is performed in the service layer before database operations.
-
-**Password Storage**
-- Passwords are never stored in plaintext and are hashed before storage using secure hashing algorithms.
-
-**Environment Variables**
-- Sensitive configuration (database credentials, secret keys, Gemini API key) is stored in `.env` and never committed to source control.
-
-**AI Security**
-- The AI module never accesses the database directly. All financial information flows through the service layer after ownership validation, which prevents unauthorized data access, keeps prompts user-specific, avoids exposing raw database structures, and centralizes authorization checks.
-
-**Validation**
-- The application uses Pydantic v2 for request validation, covering required fields, email validation, date validation, numeric validation, and enum validation.
+Passwords are hashed with Argon2 (via pwdlib) and never stored in plaintext. Every protected route requires a JWT, and protected resources (transactions, categories, budgets) are ownership-validated in the service layer before any data is returned to the caller. The AI layer never accesses the database directly — the Chat and Insight services assemble a summarized financial context (dashboard summary, budget status, top categories) and pass it to the Prompt Builder before calling Gemini, so the model never sees raw transaction records. Sensitive configuration (database credentials, secret keys, Gemini API key) lives in `.env` and is never committed. All input is validated with Pydantic v2. CORS is currently configured with a permissive origin (`allow_origins=["*"]`) — fine for the current API-only surface, but worth restricting to specific origins once a frontend consumes this API.
 
 ---
 
 ## ⚠️ Error Handling
 
-The application uses centralized exception handling to return consistent error responses.
-
 | Status | Meaning |
 |---------|----------|
-| 200 | Success |
-| 201 | Created |
-| 204 | Deleted |
 | 400 | Invalid Request |
 | 401 | Unauthorized |
 | 403 | Forbidden |
-| 404 | Resource Not Found |
+| 404 | Not Found |
 | 409 | Conflict |
 | 422 | Validation Error |
 | 500 | Internal Server Error |
 
 ```json
-{
-  "detail": "Transaction not found."
-}
+{ "detail": "Transaction not found." }
 ```
 
 ---
 
 ## 🧪 Testing
 
+FinPilot AI includes an automated test suite (pytest) covering API endpoints, authentication, business logic, database interactions, AI services, validation, authorization, and error handling. Code quality is checked with Ruff.
 
-No automated test suite yet. All endpoints were manually exercised through
-Swagger UI — CRUD operations, auth flows, dashboard analytics, report
-generation, AI endpoints, and error paths.
+```text
+72 passed, 1 warning in 5.08s
+```
 
-Adding pytest coverage for the service and repository layers is the next
-priority.
 ---
 
 ## ☁️ Deployment
 
-The application can be deployed on any platform supporting FastAPI, including Render, Railway, Fly.io, Azure App Service, AWS Elastic Beanstalk, Google Cloud Run, and DigitalOcean App Platform.
+FinPilot AI is deployed as a production FastAPI service on Render, with a managed Neon PostgreSQL database (`DATABASE_URL`, distinct from the Dockerized PostgreSQL 17 used for local development). The Python runtime is pinned via `runtime.txt` (3.12.10), and `requirements.txt` is exported from `uv.lock` for Render's build.
 
-The application is designed to be cloud-agnostic and can be deployed to any platform supporting ASGI-based Python applications.
+**Base URL:** `https://finance-assistant-1tks.onrender.com`
 
-**Deployment checklist**
-- [ ] Environment variables configured
-- [ ] PostgreSQL database available
-- [ ] Database migrations executed
-- [ ] Gemini API key configured
-- [ ] Dependencies installed
-- [ ] Swagger loads successfully
+Verified health checks:
+
+```text
+GET /       → 200 OK
+GET /health → healthy, database: connected
+HEAD /docs  → 200 OK
+```
+
+The application is also cloud-agnostic and can be deployed to any platform supporting ASGI-based Python applications (Railway, Fly.io, Azure, AWS, Google Cloud Run, DigitalOcean) — see [Run with Docker](#-run-with-docker-alternative) for the containerized setup used in local and production-style testing.
 
 ---
 
 ## 🗺 Roadmap
 
 **✅ Completed**
-- User Authentication
-- Categories CRUD
-- Transactions CRUD
-- Dashboard Analytics
-- Budget Management & Alerts
-- Reports & PDF Export
-- AI Insights & AI Chat
-- Exception Handling
-- Swagger Documentation
+User Authentication · Categories, Transactions & Budgets CRUD · Dashboard Analytics · Reports, PDF & CSV Export · AI Insights & AI Chat · Exception Handling · Swagger Documentation · Alembic Database Migrations · Docker & Docker Compose · Automated pytest Suite (72 passing) · Ruff Code Quality Checks · Render Production Deployment (Neon PostgreSQL)
 
 **🚧 Planned**
-- Docker Support & CI/CD Pipeline
-- Unit Testing
-- Email Reports
-- Multi-Currency Support
-- Expense Forecasting
-- OCR Receipt Scanner
-- Investment Portfolio Tracking
-- Savings Goals
-- Notification System
-- Banking API Integration
+GitHub Actions CI/CD · Email Reports · Multi-Currency Support · Expense Forecasting · OCR Receipt Scanner · Investment Portfolio Tracking · Savings Goals · Notification System · Banking API Integration
 
 **🌱 Future Scope**
-
-| Area | Enhancements |
-|------|--------------|
-| Finance | Investment tracking, mutual fund analysis, SIP calculator, loan management, credit score monitoring, net worth dashboard |
-| AI | RAG, expense forecasting, goal-based planning, budget coaching, voice assistant, receipt OCR, spending predictions |
-| Analytics | Interactive charts, yearly reports, cash flow forecasting, savings trends, financial health score |
-| Deployment | Docker, Kubernetes, GitHub Actions CI/CD, Redis cache, Celery background tasks, Nginx, Prometheus, Grafana |
+Retrieval-Augmented Generation (RAG), voice-based financial assistant, cash flow forecasting, financial health score, Kubernetes, Redis caching, Celery background tasks, and observability with Prometheus/Grafana.
 
 ---
 
 ## ❓ Frequently Asked Questions
 
-**Why FastAPI?**
-FastAPI provides excellent performance, automatic API documentation, type safety, and developer productivity.
-
-**Why PostgreSQL?**
-PostgreSQL offers strong relational integrity, ACID compliance, and excellent support for financial applications.
-
-**Why SQLAlchemy?**
-SQLAlchemy provides a clean abstraction over SQL while maintaining flexibility and performance.
-
-**Why Gemini AI?**
-Gemini offers high-quality reasoning, fast responses, and seamless integration for financial analysis.
-
-**Why Repository Pattern?**
-Separating database operations from business logic improves maintainability, testability, and scalability.
+**Why these choices?** FastAPI for performance and automatic API docs; PostgreSQL for relational integrity in a financial domain; SQLAlchemy with the Repository Pattern for a clean, testable data layer; Google Gemini for fast, high-quality reasoning with a simple SDK that can be swapped for another LLM with minimal changes.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome. If you'd like to improve FinPilot AI, feel free to fork the repository and submit a Pull Request.
+Contributions are welcome — fork the repo and submit a pull request.
 
-1. Fork the repository.
-2. Clone your fork:
-   ```bash
-   git clone [https://github.com/antrika02/finance_assistant]
-   ```
-3. Create a new feature branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-4. Make your changes.
-5. Commit your changes:
-   ```bash
-   git commit -m "feat: add your feature"
-   ```
-6. Push your branch:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-7. Open a Pull Request.
-
-**Development guidelines:** follow the existing project structure, use type hints wherever possible, keep services independent, add meaningful commit messages, test APIs before submitting, and follow PEP-8 conventions.
-
-**Commit convention**
+```bash
+git clone https://github.com/antrika02/finance_assistant
+cd finance_assistant
+git checkout -b feature/your-feature-name
+# make your changes
+git commit -m "feat: add your feature"
+git push origin feature/your-feature-name
 ```
-feat: add AI financial chat
-fix: resolve budget validation issue
-refactor: improve dashboard service
-docs: update README
-style: format code
-test: add transaction tests
-chore: update dependencies
-```
+
+Follow the existing project structure, use type hints, keep services independent, and test before submitting. Commit convention: `feat:`, `fix:`, `refactor:`, `docs:`, `style:`, `test:`, `chore:`.
 
 ---
 
@@ -933,22 +573,20 @@ Backend Developer | AI Engineer
 
 | Platform | Link |
 |----------|------|
-| GitHub | `https://github.com/antrika02` |
-| LinkedIn | `https://www.linkedin.com/in/antrika-kashyap-070502250/` |
-| Email | `antrikakashyap2@gmail.com` |
+| GitHub | [github.com/antrika02](https://github.com/antrika02) |
+| LinkedIn | [linkedin.com/in/antrika-kashyap-070502250](https://www.linkedin.com/in/antrika-kashyap-070502250/) |
+| Email | antrikakashyap2@gmail.com |
 
-If you found this project useful, consider giving it a ⭐ on GitHub — it helps others discover the project and motivates future improvements.
+If you found this project useful, consider giving it a ⭐ on GitHub.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License. Feel free to use it for learning, inspiration, or contribution.
+Licensed under the MIT License.
 
 ---
 
 <p align="center">
-  ⭐ If you enjoyed this project, please consider giving it a Star ⭐
-  <br>
-  Built with ❤️ using FastAPI, PostgreSQL, SQLAlchemy, and Google Gemini AI.
+  ⭐ Built with FastAPI, PostgreSQL, SQLAlchemy, and Google Gemini AI.
 </p>
