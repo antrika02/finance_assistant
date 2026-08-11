@@ -1,4 +1,27 @@
 services:
+  api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+
+    container_name: finpilot_api
+
+    restart: unless-stopped
+
+    env_file:
+      - ../.env
+
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:17
 
@@ -18,7 +41,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d personal_finance"]
       interval: 10s
       timeout: 5s
       retries: 5
