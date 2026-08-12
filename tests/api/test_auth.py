@@ -1,3 +1,8 @@
+from datetime import UTC, datetime, timedelta
+
+from jose import jwt
+
+from app.core.settings import get_settings
 from tests.auth import auth_headers
 from tests.factories import user_payload
 
@@ -94,3 +99,58 @@ def test_current_user_without_token(client):
     response = client.get("/auth/me")
 
     assert response.status_code == 401
+
+
+def test_current_user_with_invalid_token(client):
+    response = client.get(
+        "/auth/me",
+        headers={"Authorization": "Bearer invalid-token"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid or expired token."
+
+
+def test_current_user_with_expired_token(client):
+    settings = get_settings()
+
+    expired_payload = {
+        "sub": "test@example.com",
+        "exp": datetime.now(UTC) - timedelta(minutes=1),
+    }
+
+    token = jwt.encode(
+        expired_payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
+    )
+
+    response = client.get(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid or expired token."
+
+
+def test_current_user_with_token_without_subject(client):
+    settings = get_settings()
+
+    payload = {
+        "exp": datetime.now(UTC) + timedelta(minutes=30),
+    }
+
+    token = jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
+    )
+
+    response = client.get(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid token."

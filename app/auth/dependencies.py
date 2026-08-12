@@ -1,5 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError
 
 from app.auth.jwt import decode_access_token
 from app.dependencies.services import get_user_service
@@ -15,14 +16,21 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
     service: UserService = Depends(get_user_service),
 ) -> User:
-    payload = decode_access_token(token)
+    try:
+        payload = decode_access_token(token)
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     email = payload.get("sub")
-
     if email is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     user = service.get_user_by_email(email)
@@ -31,6 +39,7 @@ def get_current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
     return user
