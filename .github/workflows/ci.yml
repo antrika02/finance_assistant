@@ -1,6 +1,6 @@
 name: CI
 
-xon:
+on:
   push:
     branches:
       - main
@@ -12,6 +12,10 @@ jobs:
   test:
     name: Lint and Test
     runs-on: ubuntu-latest
+
+    env:
+      SECRET_KEY: ci-test-secret-key
+      GEMINI_API_KEY: ci-test-api-key
 
     steps:
       - name: Checkout repository
