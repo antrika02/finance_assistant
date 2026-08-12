@@ -2,7 +2,6 @@ from app.auth.hashing import hash_password, verify_password
 from app.exceptions.user import (
     InvalidCredentialsError,
     UserAlreadyExistsError,
-    UserNotFoundError,
 )
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
@@ -38,7 +37,7 @@ class AuthService:
         user = self.user_repository.get_by_email(email)
 
         if not user:
-            raise UserNotFoundError()
+            raise InvalidCredentialsError()
 
         if not verify_password(password, user.hashed_password):
             raise InvalidCredentialsError()

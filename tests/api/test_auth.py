@@ -79,6 +79,19 @@ def test_login_invalid_password(client):
     assert response.status_code == 401
 
 
+def test_login_nonexistent_user(client):
+    response = client.post(
+        "/auth/login",
+        data={
+            "username": "nonexistent@example.com",
+            "password": "WrongPassword",
+        },
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid email or password."
+
+
 def test_current_user(client):
     headers = auth_headers(client)
 
