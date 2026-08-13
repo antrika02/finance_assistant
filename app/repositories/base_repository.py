@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 
@@ -11,11 +12,24 @@ class BaseRepository[T]:
         self.db = db
         self.model = model
 
+    def _commit(self) -> None:
+        """
+        Commit the current transaction.
+
+        If the commit fails, roll back the transaction before
+        re-raising the original SQLAlchemy exception.
+        """
+        try:
+            self.db.commit()
+        except SQLAlchemyError:
+            self.db.rollback()
+            raise
+
     def create(self, **data) -> T:
         obj = self.model(**data)
 
         self.db.add(obj)
-        self.db.commit()
+        self._commit()
         self.db.refresh(obj)
 
         return obj
@@ -37,7 +51,7 @@ class BaseRepository[T]:
         self,
         obj: T,
     ) -> T:
-        self.db.commit()
+        self._commit()
         self.db.refresh(obj)
 
         return obj
@@ -47,4 +61,4 @@ class BaseRepository[T]:
         obj: T,
     ) -> None:
         self.db.delete(obj)
-        self.db.commit()
+        self._commit()
