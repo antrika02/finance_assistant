@@ -68,9 +68,7 @@ class Settings(BaseSettings):
             return self
 
         if self.DEBUG:
-            raise ValueError(
-                "DEBUG must be False when APP_ENV=production."
-            )
+            raise ValueError("DEBUG must be False when APP_ENV=production.")
 
         if len(self.SECRET_KEY) < 32:
             raise ValueError(
@@ -78,12 +76,15 @@ class Settings(BaseSettings):
                 "when APP_ENV=production."
             )
 
-        if (
-            self.BACKEND_CORS_ORIGINS.strip() == "*"
-        ):
+        if self.BACKEND_CORS_ORIGINS.strip() == "*":
             raise ValueError(
                 "BACKEND_CORS_ORIGINS must explicitly define trusted "
                 "origins when APP_ENV=production."
+            )
+
+        if not self.DATABASE_URL_OVERRIDE:
+            raise ValueError(
+                "DATABASE_URL_OVERRIDE must be configured when APP_ENV=production."
             )
 
         return self
