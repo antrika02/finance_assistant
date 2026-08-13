@@ -58,20 +58,32 @@ class Settings(BaseSettings):
     )
 
     @model_validator(mode="after")
-    def validate_cors_configuration(self):
+    def validate_production_configuration(self):
         """
-        Prevent wildcard CORS configuration in production.
+        Validate security-sensitive configuration when running
+        in production.
+        """
 
-        Wildcard origins are acceptable during local development,
-        but production must explicitly define trusted origins.
-        """
+        if self.APP_ENV.lower() != "production":
+            return self
+
+        if self.DEBUG:
+            raise ValueError(
+                "DEBUG must be False when APP_ENV=production."
+            )
+
+        if len(self.SECRET_KEY) < 32:
+            raise ValueError(
+                "SECRET_KEY must be at least 32 characters long "
+                "when APP_ENV=production."
+            )
+
         if (
-            self.APP_ENV.lower() == "production"
-            and self.BACKEND_CORS_ORIGINS.strip() == "*"
+            self.BACKEND_CORS_ORIGINS.strip() == "*"
         ):
             raise ValueError(
-                "BACKEND_CORS_ORIGINS must explicitly define trusted origins "
-                "when APP_ENV=production."
+                "BACKEND_CORS_ORIGINS must explicitly define trusted "
+                "origins when APP_ENV=production."
             )
 
         return self
