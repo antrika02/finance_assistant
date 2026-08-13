@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import computed_field
+from pydantic import computed_field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -31,8 +31,6 @@ class Settings(BaseSettings):
     # --------------------------------------------------
     # Database
     # --------------------------------------------------
-
-    # Optional full connection string (used in production)
     DATABASE_URL_OVERRIDE: str | None = None
 
     DATABASE_HOST: str = "localhost"
@@ -58,6 +56,25 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="ignore",
     )
+
+    @model_validator(mode="after")
+    def validate_cors_configuration(self):
+        """
+        Prevent wildcard CORS configuration in production.
+
+        Wildcard origins are acceptable during local development,
+        but production must explicitly define trusted origins.
+        """
+        if (
+            self.APP_ENV.lower() == "production"
+            and self.BACKEND_CORS_ORIGINS.strip() == "*"
+        ):
+            raise ValueError(
+                "BACKEND_CORS_ORIGINS must explicitly define trusted origins "
+                "when APP_ENV=production."
+            )
+
+        return self
 
     @computed_field
     @property
