@@ -8,10 +8,19 @@ settings = get_settings()
 
 
 def create_access_token(subject: str) -> str:
-    expire = datetime.now(UTC) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    """
+    Create a JWT access token.
+
+    The subject should contain the immutable user identifier.
+    """
+    now = datetime.now(UTC)
+    expire = now + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+    )
 
     payload = {
         "sub": subject,
+        "iat": now,
         "exp": expire,
     }
 

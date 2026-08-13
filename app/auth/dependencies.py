@@ -25,15 +25,25 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    email = payload.get("sub")
-    if email is None:
+    subject = payload.get("sub")
+
+    if subject is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = service.get_user_by_email(email)
+    try:
+        user_id = int(subject)
+    except (TypeError, ValueError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user = service.get_user(user_id)
 
     if user is None or not user.is_active:
         raise HTTPException(

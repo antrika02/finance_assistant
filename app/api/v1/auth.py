@@ -40,7 +40,7 @@ def login(
         password=form_data.password,
     )
 
-    access_token = create_access_token(user.email)
+    access_token = create_access_token(str(user.id))
 
     return TokenResponse(
         access_token=access_token,

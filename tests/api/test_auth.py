@@ -62,12 +62,17 @@ def test_duplicate_email(client):
 
 
 def test_login_success(client):
+    settings = get_settings()
     payload = user_payload()
 
-    client.post(
+    register_response = client.post(
         "/auth/register",
         json=payload,
     )
+
+    assert register_response.status_code == 201
+
+    user_id = register_response.json()["id"]
 
     response = client.post(
         "/auth/login",
@@ -79,7 +84,18 @@ def test_login_success(client):
 
     assert response.status_code == 200
 
-    assert "access_token" in response.json()
+    token = response.json()["access_token"]
+
+    decoded = jwt.decode(
+        token,
+        settings.SECRET_KEY,
+        algorithms=[settings.ALGORITHM],
+    )
+
+    assert decoded["sub"] == str(user_id)
+    assert "iat" in decoded
+    assert "exp" in decoded
+    assert decoded["exp"] > decoded["iat"]
 
 
 def test_login_invalid_password(client):
@@ -172,7 +188,7 @@ def test_current_user_with_expired_token(client):
     settings = get_settings()
 
     expired_payload = {
-        "sub": "test@example.com",
+        "sub": "1",
         "exp": datetime.now(UTC) - timedelta(minutes=1),
     }
 
@@ -195,6 +211,29 @@ def test_current_user_with_token_without_subject(client):
     settings = get_settings()
 
     payload = {
+        "exp": datetime.now(UTC) + timedelta(minutes=30),
+    }
+
+    token = jwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM,
+    )
+
+    response = client.get(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid token."
+
+
+def test_current_user_with_invalid_subject(client):
+    settings = get_settings()
+
+    payload = {
+        "sub": "not-a-user-id",
         "exp": datetime.now(UTC) + timedelta(minutes=30),
     }
 
