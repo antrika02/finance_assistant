@@ -35,10 +35,10 @@ def get_current_user(
 
     user = service.get_user_by_email(email)
 
-    if user is None:
+    if user is None or not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found.",
+            detail="Invalid or inactive account.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

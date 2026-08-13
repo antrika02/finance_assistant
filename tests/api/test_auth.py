@@ -1,10 +1,32 @@
 from datetime import UTC, datetime, timedelta
 
 from jose import jwt
+from sqlalchemy import select
 
 from app.core.settings import get_settings
+from app.models.user import User
 from tests.auth import auth_headers
+from tests.database import TestingSessionLocal
 from tests.factories import user_payload
+
+
+def deactivate_user(email: str) -> None:
+    """
+    Deactivate a user directly in the test database.
+    """
+    db = TestingSessionLocal()
+
+    try:
+        user = db.scalar(
+            select(User).where(User.email == email),
+        )
+
+        assert user is not None
+
+        user.is_active = False
+        db.commit()
+    finally:
+        db.close()
 
 
 def test_register_user(client):
@@ -92,6 +114,28 @@ def test_login_nonexistent_user(client):
     assert response.json()["detail"] == "Invalid email or password."
 
 
+def test_login_inactive_user(client):
+    payload = user_payload()
+
+    client.post(
+        "/auth/register",
+        json=payload,
+    )
+
+    deactivate_user(payload["email"])
+
+    response = client.post(
+        "/auth/login",
+        data={
+            "username": payload["email"],
+            "password": payload["password"],
+        },
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid email or password."
+
+
 def test_current_user(client):
     headers = auth_headers(client)
 
@@ -167,3 +211,34 @@ def test_current_user_with_token_without_subject(client):
 
     assert response.status_code == 401
     assert response.json()["detail"] == "Invalid token."
+
+
+def test_inactive_user_cannot_use_existing_token(client):
+    payload = user_payload()
+
+    client.post(
+        "/auth/register",
+        json=payload,
+    )
+
+    login_response = client.post(
+        "/auth/login",
+        data={
+            "username": payload["email"],
+            "password": payload["password"],
+        },
+    )
+
+    assert login_response.status_code == 200
+
+    token = login_response.json()["access_token"]
+
+    deactivate_user(payload["email"])
+
+    response = client.get(
+        "/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid or inactive account."
