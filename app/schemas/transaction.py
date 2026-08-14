@@ -1,25 +1,45 @@
 from datetime import date
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.enums import TransactionType
 
 
 class TransactionCreate(BaseModel):
-    amount: Decimal
+    amount: Decimal = Field(
+        gt=0,
+        max_digits=12,
+        decimal_places=2,
+    )
     type: TransactionType
-    description: str | None = None
+    description: str | None = Field(
+        default=None,
+        max_length=255,
+    )
     transaction_date: date
-    category_id: int
+    category_id: int = Field(
+        gt=0,
+    )
 
 
 class TransactionUpdate(BaseModel):
-    amount: Decimal | None = None
+    amount: Decimal | None = Field(
+        default=None,
+        gt=0,
+        max_digits=12,
+        decimal_places=2,
+    )
     type: TransactionType | None = None
-    description: str | None = None
+    description: str | None = Field(
+        default=None,
+        max_length=255,
+    )
     transaction_date: date | None = None
-    category_id: int | None = None
+    category_id: int | None = Field(
+        default=None,
+        gt=0,
+    )
 
 
 class TransactionResponse(BaseModel):

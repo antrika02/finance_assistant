@@ -1,20 +1,41 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.enums import CategoryType
 
 
 class CategoryCreate(BaseModel):
-    name: str
+    name: str = Field(
+        min_length=1,
+        max_length=100,
+    )
     type: CategoryType
-    icon: str
-    color: str
+    icon: str = Field(
+        min_length=1,
+        max_length=50,
+    )
+    color: str = Field(
+        min_length=1,
+        max_length=20,
+    )
 
 
 class CategoryUpdate(BaseModel):
-    name: str | None = None
+    name: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=100,
+    )
     type: CategoryType | None = None
-    icon: str | None = None
-    color: str | None = None
+    icon: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=50,
+    )
+    color: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=20,
+    )
 
 
 class CategoryResponse(BaseModel):

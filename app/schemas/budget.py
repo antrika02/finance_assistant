@@ -1,13 +1,25 @@
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class BudgetBase(BaseModel):
-    amount: Decimal
-    month: int
-    year: int
-    category_id: int
+    amount: Decimal = Field(
+        gt=0,
+        max_digits=12,
+        decimal_places=2,
+    )
+    month: int = Field(
+        ge=1,
+        le=12,
+    )
+    year: int = Field(
+        ge=2000,
+        le=2100,
+    )
+    category_id: int = Field(
+        gt=0,
+    )
 
 
 class BudgetCreate(BudgetBase):
@@ -15,10 +27,26 @@ class BudgetCreate(BudgetBase):
 
 
 class BudgetUpdate(BaseModel):
-    amount: Decimal | None = None
-    month: int | None = None
-    year: int | None = None
-    category_id: int | None = None
+    amount: Decimal | None = Field(
+        default=None,
+        gt=0,
+        max_digits=12,
+        decimal_places=2,
+    )
+    month: int | None = Field(
+        default=None,
+        ge=1,
+        le=12,
+    )
+    year: int | None = Field(
+        default=None,
+        ge=2000,
+        le=2100,
+    )
+    category_id: int | None = Field(
+        default=None,
+        gt=0,
+    )
 
 
 class BudgetResponse(BudgetBase):
