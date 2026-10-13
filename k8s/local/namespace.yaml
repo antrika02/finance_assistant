@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: finpilot
+  labels:
+    app.kubernetes.io/name: finpilot
+    app.kubernetes.io/part-of: finpilot-ai

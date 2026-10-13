@@ -1,4 +1,5 @@
 from functools import lru_cache
+from urllib.parse import quote_plus
 
 from pydantic import computed_field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -93,33 +94,39 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         """
-        Returns the database connection string.
+        Return the database connection string.
 
-        Uses DATABASE_URL_OVERRIDE when provided (Render/Neon),
-        otherwise constructs a local PostgreSQL URL.
+        Uses DATABASE_URL_OVERRIDE when provided (for example, Neon or Render).
+        Otherwise, constructs a URL from the individual database settings.
+
+        URL-encodes the username and password to safely handle special
+        characters such as @, :, /, #, and %.
         """
+
         if self.DATABASE_URL_OVERRIDE:
             url = self.DATABASE_URL_OVERRIDE
 
-            if url.startswith("postgresql://"):
+            if url.startswith("postgres://"):
+                url = url.replace(
+                    "postgres://",
+                    "postgresql+psycopg://",
+                    1,
+                )
+            elif url.startswith("postgresql://"):
                 url = url.replace(
                     "postgresql://",
                     "postgresql+psycopg://",
                     1,
                 )
 
-            elif url.startswith("postgres://"):
-                url = url.replace(
-                    "postgres://",
-                    "postgresql+psycopg://",
-                    1,
-                )
-
             return url
+
+        user = quote_plus(self.DATABASE_USER)
+        password = quote_plus(self.DATABASE_PASSWORD)
 
         return (
             f"postgresql+psycopg://"
-            f"{self.DATABASE_USER}:{self.DATABASE_PASSWORD}"
+            f"{user}:{password}"
             f"@{self.DATABASE_HOST}:{self.DATABASE_PORT}/"
             f"{self.DATABASE_NAME}"
         )
@@ -127,4 +134,7 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """
+    Return the cached application settings.
+    """
     return Settings()

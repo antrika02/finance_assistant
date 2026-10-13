@@ -24,3 +24,5 @@ htmlcov/
 
 # macOS
 .DS_Store
+# Local Kubernetes secrets
+k8s/local/secret.yaml

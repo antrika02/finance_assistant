@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: finpilot-migrations
+  namespace: finpilot
+  labels:
+    app.kubernetes.io/name: finpilot-ai
+    app.kubernetes.io/component: database-migration
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 180
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: finpilot-ai
+        app.kubernetes.io/component: database-migration
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrations
+          image: finpilot-api:local
+          imagePullPolicy: IfNotPresent
+          command:
+            - uv
+            - run
+            - --no-sync
+            - alembic
+            - upgrade
+            - head
+          envFrom:
+            - configMapRef:
+                name: finpilot-config
+            - secretRef:
+                name: finpilot-secrets
