@@ -14,6 +14,7 @@
   <a href="https://finance-assistant-1tks.onrender.com"><img src="https://img.shields.io/badge/Live%20API-Render-purple?style=for-the-badge" alt="Live API"></a>
   <a href="https://finance-assistant-1tks.onrender.com/docs"><img src="https://img.shields.io/badge/API%20Docs-Swagger-success?style=for-the-badge" alt="Swagger"></a>
   <img src="https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python" alt="Python">
+  <img src="https://img.shields.io/badge/Coverage-91%25-brightgreen?style=for-the-badge" alt="Test Coverage: 91%">
   <img src="https://img.shields.io/badge/FastAPI-blue?style=for-the-badge&logo=fastapi" alt="FastAPI">
   <img src="https://img.shields.io/badge/PostgreSQL-blue?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
   <img src="https://img.shields.io/badge/SQLAlchemy-red?style=for-the-badge" alt="SQLAlchemy">
@@ -69,7 +70,7 @@ FinPilot AI is a backend-first personal finance platform that lets authenticated
 | Reports, PDF & CSV Export | ✅ Implemented |
 | Gemini AI Insights & Chat | ✅ Implemented |
 | Database Migrations (Alembic) | ✅ Implemented |
-| Automated Tests | ✅ 72 passing |
+| Automated Tests | ✅ 128 passing |
 | Code Quality (Ruff) | ✅ Configured |
 | Docker & Docker Compose | ✅ Implemented |
 | Local Kubernetes Deployment (Kind) | ✅ Implemented |
@@ -587,7 +588,9 @@ uv run ruff check .
 Previously recorded test result:
 
 ```text
-72 passed, 1 warning in 5.08s
+128 passed, 1 warning in 5.90s
+
+Total application code coverage: 91% (1,338 statements; 120 missed).
 ```
 
 Test results can vary with subsequent code changes and environment configuration.
